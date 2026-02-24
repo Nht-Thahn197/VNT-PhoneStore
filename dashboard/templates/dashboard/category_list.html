@@ -1,0 +1,12 @@
+<h2>Danh sách hạng mục</h2>
+
+<a href="{% url 'category_create' %}">Thêm hạng mục</a>
+
+<ul>
+    {% for c in categories %}
+        <li>
+            {{ c.name }}
+            <a href="{% url 'category_delete' c.id %}">Xóa</a>
+        </li>
+    {% endfor %}
+</ul>

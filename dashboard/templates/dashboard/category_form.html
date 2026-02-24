@@ -1,0 +1,7 @@
+<h2>Thêm hạng mục</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="text" name="name" placeholder="Tên hạng mục">
+    <button type="submit">Lưu</button>
+</form>

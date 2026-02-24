@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'products',
     'orders',
     'core',
+    'cart',
+    'shop',
+    'dashboard',
 ]
 
 MIDDLEWARE = [
@@ -65,6 +68,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.context_processors.categories_processor',
+                'core.context_processors.cart',
             ],
         },
     },
@@ -78,8 +83,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'vnt_phonestore',
+        'USER': 'postgres',
+        'PASSWORD': 'Nhat23uThanh',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -126,3 +135,6 @@ import os
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+USE_L10N = True
+LANGUAGE_CODE = 'vi'

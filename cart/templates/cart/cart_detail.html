@@ -1,0 +1,28 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Giỏ hàng{% endblock %}
+
+{% block content %}
+<h2>Giỏ hàng</h2>
+
+<table class="table mt-4">
+    <thead>
+        <tr>
+            <th>Sản phẩm</th>
+            <th>Giá</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+        <tr>
+            <td>{{ product.name }}</td>
+            <td>{{ product.price }} VNĐ</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h4 class="text-danger">
+    Tổng tiền: {{ cart.get_total_price }} VNĐ
+</h4>
+{% endblock %}

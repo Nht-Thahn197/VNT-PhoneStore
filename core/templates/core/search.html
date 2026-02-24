@@ -1,9 +1,11 @@
 {% extends 'core/base.html' %}
 
-{% block title %}Trang chủ{% endblock %}
+{% block title %}Search{% endblock %}
 
 {% block content %}
-<div class="row">
+<h3>Kết quả tìm kiếm cho "{{ query }}"</h3>
+
+<div class="row mt-4">
     {% for product in products %}
     <div class="col-md-3">
         <div class="card mb-4">
@@ -21,6 +23,8 @@
             </div>
         </div>
     </div>
+    {% empty %}
+    <p>Không tìm thấy sản phẩm.</p>
     {% endfor %}
 </div>
 {% endblock %}

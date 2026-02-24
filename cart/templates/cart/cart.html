@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Giỏ hàng</h2>
+
+{% if cart %}
+
+<table class="table">
+    <tr>
+        <th>Sản phẩm</th>
+        <th>Số lượng</th>
+        <th>Giá</th>
+        <th>Tổng</th>
+        <th></th>
+    </tr>
+
+    {% for item in cart %}
+    <tr>
+        <td>{{ item.product.name }}</td>
+        <td>
+            <a href="{% url 'cart_decrease' item.product.id %}">-</a>
+            {{ item.quantity }}
+            <a href="{% url 'cart_add' item.product.id %}">+</a>
+        </td>
+        <td>{{ item.product.price }}</td>
+        <td>{{ item.total_price }}</td>
+        <td>
+            <a href="{% url 'cart_remove' item.product.id %}">Xoá</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h4>Tổng tiền: {{ cart.get_total_price|floatformat:0 }} đ</h4>
+
+{% else %}
+<p>Giỏ hàng trống</p>
+{% endif %}
+
+{% endblock %}
