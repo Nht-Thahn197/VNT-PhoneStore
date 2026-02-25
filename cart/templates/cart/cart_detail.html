@@ -1,28 +1,60 @@
-{% extends 'core/base.html' %}
+﻿{% extends 'core/base.html' %}
 
-{% block title %}Giỏ hàng{% endblock %}
+{% block title %}Giỏ hàng | TechOne{% endblock %}
 
 {% block content %}
-<h2>Giỏ hàng</h2>
+<section class="hero">
+    <div class="hero-card">
+        <span class="badge">Giỏ hàng</span>
+        <h1>Tổng quan giỏ hàng</h1>
+        <p>Danh sách sản phẩm bạn đã chọn để chuẩn bị thanh toán.</p>
+        <div class="hero-actions">
+            <a class="btn-primary" href="{% url 'home' %}">Tiếp tục mua sắm</a>
+            <a class="btn-ghost" href="#">Thanh toán</a>
+        </div>
+        <div class="stats">
+            <div class="stat">
+                <strong>{{ products|length }}</strong>
+                <span>Sản phẩm</span>
+            </div>
+            <div class="stat">
+                <strong>{{ cart.get_total_price|floatformat:0 }}</strong>
+                <span>Tạm tính (VNĐ)</span>
+            </div>
+        </div>
+    </div>
+    <div class="hero-card">
+        <span class="badge">Ưu đãi</span>
+        <h2>Tận dụng khuyến mãi</h2>
+        <p>Thêm phụ kiện để được combo giá tốt tại TechOne.</p>
+        <div class="callout">
+            <strong>Combo gợi ý</strong>
+            <small>Ốp lưng + cáp sạc + kính cường lực.</small>
+        </div>
+    </div>
+</section>
 
-<table class="table mt-4">
-    <thead>
-        <tr>
-            <th>Sản phẩm</th>
-            <th>Giá</th>
-        </tr>
-    </thead>
-    <tbody>
+<section class="card">
+    <div class="section-head">
+        <h2>Sản phẩm trong giỏ</h2>
+        <p class="helper">Kiểm tra lại trước khi thanh toán.</p>
+    </div>
+    {% if products %}
+    <ul class="list">
         {% for product in products %}
-        <tr>
-            <td>{{ product.name }}</td>
-            <td>{{ product.price }} VNĐ</td>
-        </tr>
+        <li class="list-item">
+            <div class="list-meta">
+                <strong>{{ product.name }}</strong>
+                <span class="muted">{{ product.price }} VNĐ</span>
+            </div>
+        </li>
         {% endfor %}
-    </tbody>
-</table>
-
-<h4 class="text-danger">
-    Tổng tiền: {{ cart.get_total_price }} VNĐ
-</h4>
+    </ul>
+    <div class="form-actions">
+        <strong>Tổng tiền: {{ cart.get_total_price|floatformat:0 }} VNĐ</strong>
+    </div>
+    {% else %}
+    <div class="empty-state">Giỏ hàng trống. Hãy thêm sản phẩm để tiếp tục.</div>
+    {% endif %}
+</section>
 {% endblock %}

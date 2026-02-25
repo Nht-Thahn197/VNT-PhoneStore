@@ -1,7 +1,82 @@
-<h2>Thêm hạng mục</h2>
+﻿{% extends "dashboard/base.html" %}
 
-<form method="post">
-    {% csrf_token %}
-    <input type="text" name="name" placeholder="Tên hạng mục">
-    <button type="submit">Lưu</button>
-</form>
+{% block title %}Thêm hạng mục | TechOne{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-card">
+        <span class="badge">Dashboard quản trị</span>
+        <h1>Thêm hạng mục mới</h1>
+        <p>Tạo danh mục nhanh gọn với bố cục gợi nhớ TechOne: nổi bật, rõ thông tin, ưu tiên trải nghiệm tìm kiếm.</p>
+        <div class="hero-actions">
+            <a class="btn-primary" href="{% url 'category_list' %}">Xem danh sách hạng mục</a>
+            <a class="btn-ghost" href="{% url 'dashboard_home' %}">Về Dashboard</a>
+        </div>
+        <div class="stats">
+            <div class="stat">
+                <strong>12</strong>
+                <span>Nhóm danh mục</span>
+            </div>
+            <div class="stat">
+                <strong>84</strong>
+                <span>Sản phẩm nổi bật</span>
+            </div>
+            <div class="stat">
+                <strong>3.2k</strong>
+                <span>Lượt tìm kiếm</span>
+            </div>
+        </div>
+    </div>
+    <div class="hero-card">
+        <span class="badge">Ưu tiên hiển thị</span>
+        <h2>Gợi ý sắp xếp</h2>
+        <p>Đặt danh mục theo mức độ quan tâm để giúp khách hàng tìm nhanh hơn trong ô tìm kiếm.</p>
+        <div class="callout">
+            <strong>Tip: Đặt tên ngắn gọn</strong>
+            <small>Ví dụ: "Điện thoại", "Laptop", "Phụ kiện" để hiển thị tốt trên thanh điều hướng.</small>
+        </div>
+    </div>
+</section>
+
+<section class="grid">
+    <div class="card form-card">
+        <h2>Thông tin hạng mục</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="category-name">Tên hạng mục</label>
+                <input id="category-name" type="text" name="name" placeholder="Nhập tên hạng mục..." required>
+                <div class="helper">Tên sẽ hiển thị trên menu và kết quả tìm kiếm.</div>
+            </div>
+            <div class="form-actions">
+                <button class="btn-primary" type="submit">Lưu hạng mục</button>
+                <a class="btn-ghost" href="{% url 'category_list' %}">Hủy</a>
+            </div>
+        </form>
+    </div>
+    <aside class="card tips">
+        <h3>Danh mục phổ biến</h3>
+        <p class="helper">Chọn nhanh để đồng bộ giao diện điều hướng.</p>
+        <ul class="chips">
+            <li class="chip">Điện thoại</li>
+            <li class="chip">Laptop</li>
+            <li class="chip">Âm thanh</li>
+            <li class="chip">Đồng hồ</li>
+            <li class="chip">Máy cũ</li>
+            <li class="chip">Phụ kiện</li>
+            <li class="chip">PC Gaming</li>
+            <li class="chip">Tivi</li>
+        </ul>
+        <div class="callout">
+            <strong>Ưu đãi theo danh mục</strong>
+            <small>Tạo nhãn khuyến mãi riêng cho từng nhóm để tăng tỷ lệ nhấp.</small>
+        </div>
+    </aside>
+</section>
+
+<section class="policy">
+    <div class="policy-item"><span class="policy-dot"></span>Chính sách giá rõ ràng, niêm yết công khai</div>
+    <div class="policy-item"><span class="policy-dot"></span>Giao nhanh theo khu vực, ưu tiên khách gần cửa hàng</div>
+    <div class="policy-item"><span class="policy-dot"></span>Thu cũ đổi mới giúp tối ưu danh mục sản phẩm</div>
+</section>
+{% endblock %}

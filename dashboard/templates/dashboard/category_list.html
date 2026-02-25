@@ -1,12 +1,87 @@
-<h2>Danh sách hạng mục</h2>
+﻿{% extends "dashboard/base.html" %}
 
-<a href="{% url 'category_create' %}">Thêm hạng mục</a>
+{% block title %}Danh sách hạng mục | TechOne{% endblock %}
 
-<ul>
-    {% for c in categories %}
-        <li>
-            {{ c.name }}
-            <a href="{% url 'category_delete' c.id %}">Xóa</a>
-        </li>
-    {% endfor %}
-</ul>
+{% block content %}
+<section class="hero">
+    <div class="hero-card">
+        <span class="badge">Dashboard quản trị</span>
+        <h1>Danh sách hạng mục</h1>
+        <p>Tổng quan các danh mục đang hiển thị trên TechOne, theo dõi nhanh và thao tác gọn gàng.</p>
+        <div class="hero-actions">
+            <a class="btn-primary" href="{% url 'category_create' %}">Thêm hạng mục</a>
+            <a class="btn-ghost" href="{% url 'dashboard_home' %}">Về Dashboard</a>
+        </div>
+        <div class="stats">
+            <div class="stat">
+                <strong>{{ categories|length }}</strong>
+                <span>Danh mục đang hoạt động</span>
+            </div>
+            <div class="stat">
+                <strong>4</strong>
+                <span>Nhóm ưu tiên</span>
+            </div>
+            <div class="stat">
+                <strong>28</strong>
+                <span>Khuyến mãi theo danh mục</span>
+            </div>
+        </div>
+    </div>
+    <div class="hero-card">
+        <span class="badge">Quy chuẩn hiển thị</span>
+        <h2>Nhắc nhanh</h2>
+        <p>Danh mục ngắn gọn giúp thanh điều hướng gọn gàng và tăng tốc tìm kiếm.</p>
+        <div class="callout">
+            <strong>Gợi ý</strong>
+            <small>Hạn chế dùng dấu gạch ngang hoặc ký tự quá dài trong tên danh mục.</small>
+        </div>
+    </div>
+</section>
+
+<section class="grid">
+    <div class="card">
+        <h2>Danh mục hiện có</h2>
+        {% if categories %}
+        <ul class="list">
+            {% for c in categories %}
+            <li class="list-item">
+                <div class="list-meta">
+                    <strong>{{ c.name }}</strong>
+                    <span>Mã #{{ c.id }}</span>
+                </div>
+                <div class="list-actions">
+                    <a class="btn-ghost btn-sm" href="{% url 'category_delete' c.id %}">Xóa</a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div class="empty-state">Chưa có danh mục nào. Hãy tạo danh mục đầu tiên để hiển thị trên TechOne.</div>
+        {% endif %}
+    </div>
+    <aside class="card tips">
+        <h3>Danh mục đề xuất</h3>
+        <p class="helper">Gợi ý đồng nhất với menu điều hướng.</p>
+        <ul class="chips">
+            <li class="chip">Điện thoại</li>
+            <li class="chip">Laptop</li>
+            <li class="chip">Âm thanh</li>
+            <li class="chip">Đồng hồ</li>
+            <li class="chip">Camera</li>
+            <li class="chip">Phụ kiện</li>
+            <li class="chip">PC Gaming</li>
+            <li class="chip">Điện máy</li>
+        </ul>
+        <div class="callout">
+            <strong>Thống nhất nội dung</strong>
+            <small>Đặt tên trùng khớp với chiến dịch marketing để tăng nhận diện.</small>
+        </div>
+    </aside>
+</section>
+
+<section class="policy">
+    <div class="policy-item"><span class="policy-dot"></span>Quản lý danh mục theo khu vực cửa hàng</div>
+    <div class="policy-item"><span class="policy-dot"></span>Cập nhật nhanh theo chiến dịch ưu đãi</div>
+    <div class="policy-item"><span class="policy-dot"></span>Đồng bộ mô tả danh mục khi thay đổi</div>
+</section>
+{% endblock %}

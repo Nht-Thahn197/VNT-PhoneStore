@@ -1,29 +1,32 @@
-{% extends 'core/base.html' %}
+﻿{% extends 'core/base.html' %}
 
-{% block title %}{{ product.name }}{% endblock %}
+{% block title %}{{ product.name }} | TechOne{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-6">
-        <img src="{{ product.image.url }}" class="img-fluid">
+<section class="detail-grid">
+    <div class="detail-media">
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
     </div>
-
-    <div class="col-md-6">
-        <h2>{{ product.name }}</h2>
-
-        {% if product.old_price %}
-        <p class="text-muted text-decoration-line-through">
-            {{ product.old_price }} VNĐ
-        </p>
-        {% endif %}
-
-        <h3 class="text-danger">{{ product.price }} VNĐ</h3>
-
-        <p class="mt-4">{{ product.description }}</p>
-
-        <a href="{% url 'cart_add' product.id %}" class="btn btn-primary">
-            Thêm vào giỏ hàng
-        </a>
+    <div class="detail-info">
+        <span class="badge">Chi tiết sản phẩm</span>
+        <h1>{{ product.name }}</h1>
+        <div class="price-line">
+            <span class="price">{{ product.price }} VNĐ</span>
+            {% if product.old_price %}
+            <span class="price-old">{{ product.old_price }} VNĐ</span>
+            {% endif %}
+        </div>
+        <p>{{ product.description }}</p>
+        <div class="hero-actions">
+            <a class="btn-primary" href="{% url 'cart_add' product.id %}">Thêm vào giỏ hàng</a>
+            <a class="btn-ghost" href="{% url 'home' %}">Tiếp tục mua sắm</a>
+        </div>
     </div>
-</div>
+</section>
+
+<section class="policy">
+    <div class="policy-item"><span class="policy-dot"></span>Bảo hành chính hãng theo tiêu chuẩn TechOne</div>
+    <div class="policy-item"><span class="policy-dot"></span>Hỗ trợ trả góp 0% với nhiều ngân hàng</div>
+    <div class="policy-item"><span class="policy-dot"></span>Kiểm tra máy miễn phí tại cửa hàng</div>
+</section>
 {% endblock %}

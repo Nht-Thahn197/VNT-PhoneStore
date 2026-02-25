@@ -1,30 +1,68 @@
-{% extends 'core/base.html' %}
+﻿{% extends 'core/base.html' %}
 
-{% block title %}Search{% endblock %}
+{% block title %}Tìm kiếm | TechOne{% endblock %}
 
 {% block content %}
-<h3>Kết quả tìm kiếm cho "{{ query }}"</h3>
-
-<div class="row mt-4">
-    {% for product in products %}
-    <div class="col-md-3">
-        <div class="card mb-4">
-            <img src="{{ product.image.url }}" class="card-img-top"
-                 style="height:250px;object-fit:cover;">
-            <div class="card-body">
-                <h5>
-                    <a href="{% url 'product_detail' product.slug %}">
-                        {{ product.name }}
-                    </a>
-                </h5>
-                <p class="text-danger fw-bold">
-                    {{ product.price }} VNĐ
-                </p>
-            </div>
+<section class="hero">
+    <div class="hero-card">
+        <span class="badge">Kết quả tìm kiếm</span>
+        {% if query %}
+        <h1>"{{ query }}"</h1>
+        <p>Tổng hợp sản phẩm phù hợp với từ khóa bạn đang tìm.</p>
+        {% else %}
+        <h1>Tất cả sản phẩm</h1>
+        <p>Khám phá danh sách sản phẩm đang có tại TechOne.</p>
+        {% endif %}
+        <div class="hero-actions">
+            <a class="btn-primary" href="{% url 'home' %}">Về trang chủ</a>
+            <a class="btn-ghost" href="{% url 'search' %}?q=">Tìm lại</a>
         </div>
     </div>
-    {% empty %}
-    <p>Không tìm thấy sản phẩm.</p>
-    {% endfor %}
-</div>
+    <div class="hero-card">
+        <span class="badge">Gợi ý</span>
+        <h2>Từ khóa liên quan</h2>
+        <p>Thử tìm kiếm theo hãng, dung lượng hoặc mức giá mong muốn.</p>
+        <div class="callout">
+            <strong>Ví dụ</strong>
+            <small>"iPhone 15", "Samsung 256GB", "Tai nghe Bluetooth"</small>
+        </div>
+    </div>
+</section>
+
+<section class="card">
+    <div class="section-head">
+        <h2>Sản phẩm tìm thấy</h2>
+        {% if query %}
+        <p class="helper">Kết quả phù hợp với "{{ query }}".</p>
+        {% else %}
+        <p class="helper">Danh sách sản phẩm mới nhất.</p>
+        {% endif %}
+    </div>
+    {% if products %}
+    <div class="product-grid">
+        {% for product in products %}
+        <article class="product-card">
+            <a class="product-media" href="{% url 'product_detail' product.slug %}">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            </a>
+            <div class="product-info">
+                <h3>{{ product.name }}</h3>
+                <div class="price-line">
+                    <span class="price">{{ product.price }} VNĐ</span>
+                    {% if product.old_price %}
+                    <span class="price-old">{{ product.old_price }} VNĐ</span>
+                    {% endif %}
+                </div>
+                <div class="product-actions">
+                    <a class="btn-ghost btn-sm" href="{% url 'product_detail' product.slug %}">Chi tiết</a>
+                    <a class="btn-primary btn-sm" href="{% url 'cart_add' product.id %}">Thêm vào giỏ</a>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">Không tìm thấy sản phẩm phù hợp.</div>
+    {% endif %}
+</section>
 {% endblock %}

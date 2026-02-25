@@ -1,10 +1,25 @@
-<h2>Admin Login</h2>
+﻿{% extends "dashboard/base.html" %}
 
-<form method="post">
-    {% csrf_token %}
-    <input type="text" name="username" placeholder="Username">
-    <br><br>
-    <input type="password" name="password" placeholder="Password">
-    <br><br>
-    <button type="submit">Login</button>
-</form>
+{% block title %}Đăng nhập | TechOne{% endblock %}
+
+{% block content %}
+<section class="card auth-card">
+    <h2>Đăng nhập quản trị</h2>
+    <p class="helper">Vui lòng đăng nhập để tiếp tục quản lý TechOne.</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="username">Tên đăng nhập</label>
+            <input id="username" type="text" name="username" placeholder="Nhập tài khoản" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Mật khẩu</label>
+            <input id="password" type="password" name="password" placeholder="Nhập mật khẩu" required>
+        </div>
+        <div class="form-actions">
+            <button class="btn-primary" type="submit">Đăng nhập</button>
+            <a class="btn-ghost" href="{% url 'dashboard_home' %}">Quay lại</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

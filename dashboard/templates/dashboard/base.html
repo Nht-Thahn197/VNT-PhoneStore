@@ -1,0 +1,60 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Dashboard | TechOne{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'core/css/techone.css' %}">
+</head>
+<body>
+    <div class="promo-strip">
+        <div class="inner">
+            <div class="promo-item"><span class="promo-dot"></span>Sản phẩm chính hãng - Xuất VAT đầy đủ</div>
+            <div class="promo-item"><span class="promo-dot"></span>Giao nhanh - Miễn phí cho đơn 300k</div>
+            <div class="promo-item"><span class="promo-dot"></span>Thu cũ giá ngon - Lên đời tiết kiệm</div>
+        </div>
+    </div>
+
+    <header class="main-header">
+        <div class="header-row">
+            <a class="logo" href="{% url 'dashboard_home' %}">Tech<span>One</span></a>
+            <div class="location">Hồ Chí Minh</div>
+            <div class="search">
+                <input type="text" placeholder="Bạn muốn mua gì hôm nay?">
+                <button type="button">Tìm kiếm</button>
+            </div>
+            <div class="header-actions">
+                <div class="hotline">1800 2097</div>
+                <a class="mini" href="#">Giỏ hàng</a>
+                <a class="mini" href="#">Tài khoản</a>
+            </div>
+        </div>
+        <div class="nav-row">
+            <div class="nav-inner">
+                <button class="cat-btn" type="button">Danh mục</button>
+                <a class="nav-link" href="#">Điện thoại</a>
+                <a class="nav-link" href="#">Laptop</a>
+                <a class="nav-link" href="#">Âm thanh</a>
+                <a class="nav-link" href="#">Đồng hồ</a>
+                <a class="nav-link" href="#">Camera</a>
+                <a class="nav-link" href="#">Gia dụng</a>
+                <a class="nav-link" href="#">Phụ kiện</a>
+                <a class="nav-link" href="#">PC</a>
+                <a class="nav-link" href="#">Tivi</a>
+                <a class="nav-link" href="#">Điện máy</a>
+                <a class="nav-link" href="#">Thu cũ đổi mới</a>
+                <a class="nav-link" href="#">Khuyến mãi</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        Giao diện mô phỏng tinh thần TechOne, tối ưu cho dashboard quản trị.
+    </footer>
+</body>
+</html>

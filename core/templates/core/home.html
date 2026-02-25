@@ -1,26 +1,79 @@
-{% extends 'core/base.html' %}
+﻿{% extends 'core/base.html' %}
 
-{% block title %}Trang chủ{% endblock %}
+{% block title %}Trang chủ | TechOne{% endblock %}
 
 {% block content %}
-<div class="row">
-    {% for product in products %}
-    <div class="col-md-3">
-        <div class="card mb-4">
-            <img src="{{ product.image.url }}" class="card-img-top"
-                 style="height:250px;object-fit:cover;">
-            <div class="card-body">
-                <h5>
-                    <a href="{% url 'product_detail' product.slug %}">
-                        {{ product.name }}
-                    </a>
-                </h5>
-                <p class="text-danger fw-bold">
-                    {{ product.price }} VNĐ
-                </p>
+<section class="hero">
+    <div class="hero-card">
+        <span class="badge">TechOne</span>
+        <h1>Điện thoại chính hãng, giá tốt mỗi ngày</h1>
+        <p>Khám phá các sản phẩm nổi bật, ưu đãi rõ ràng và trải nghiệm mua sắm nhanh gọn.</p>
+        <div class="hero-actions">
+            <a class="btn-primary" href="{% url 'search' %}?q=">Tìm nhanh</a>
+            <a class="btn-ghost" href="#">Xem khuyến mãi</a>
+        </div>
+        <div class="stats">
+            <div class="stat">
+                <strong>{{ products|length }}</strong>
+                <span>Sản phẩm nổi bật</span>
+            </div>
+            <div class="stat">
+                <strong>24h</strong>
+                <span>Giao nhanh nội thành</span>
+            </div>
+            <div class="stat">
+                <strong>1-1</strong>
+                <span>Hỗ trợ đổi trả</span>
             </div>
         </div>
     </div>
-    {% endfor %}
-</div>
+    <div class="hero-card">
+        <span class="badge">Gợi ý hôm nay</span>
+        <h2>Ưu đãi theo danh mục</h2>
+        <p>Chọn nhanh nhóm sản phẩm bạn quan tâm, chúng tôi đã tối ưu sẵn trải nghiệm.</p>
+        <div class="callout">
+            <strong>Tip: Lọc nhanh theo nhu cầu</strong>
+            <small>Vào danh mục và lọc theo giá, dung lượng hoặc thương hiệu.</small>
+        </div>
+    </div>
+</section>
+
+<section class="card">
+    <div class="section-head">
+        <h2>Sản phẩm nổi bật</h2>
+        <p class="helper">Chọn lọc từ TechOne để bạn mua sắm nhanh hơn.</p>
+    </div>
+    {% if products %}
+    <div class="product-grid">
+        {% for product in products %}
+        <article class="product-card">
+            <a class="product-media" href="{% url 'product_detail' product.slug %}">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            </a>
+            <div class="product-info">
+                <h3>{{ product.name }}</h3>
+                <div class="price-line">
+                    <span class="price">{{ product.price }} VNĐ</span>
+                    {% if product.old_price %}
+                    <span class="price-old">{{ product.old_price }} VNĐ</span>
+                    {% endif %}
+                </div>
+                <div class="product-actions">
+                    <a class="btn-ghost btn-sm" href="{% url 'product_detail' product.slug %}">Chi tiết</a>
+                    <a class="btn-primary btn-sm" href="{% url 'cart_add' product.id %}">Thêm vào giỏ</a>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">Hiện chưa có sản phẩm nổi bật.</div>
+    {% endif %}
+</section>
+
+<section class="policy">
+    <div class="policy-item"><span class="policy-dot"></span>Giá niêm yết rõ ràng, ưu đãi cập nhật mỗi ngày</div>
+    <div class="policy-item"><span class="policy-dot"></span>Hỗ trợ đổi trả nhanh trong 7 ngày</div>
+    <div class="policy-item"><span class="policy-dot"></span>Cam kết hàng chính hãng, bảo hành đầy đủ</div>
+</section>
 {% endblock %}

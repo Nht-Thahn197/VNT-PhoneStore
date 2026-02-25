@@ -1,26 +1,73 @@
-{% extends 'core/base.html' %}
+﻿{% extends 'core/base.html' %}
 
-{% block title %}Trang chủ{% endblock %}
+{% block title %}{{ category.name }} | TechOne{% endblock %}
 
 {% block content %}
-<div class="row">
-    {% for product in products %}
-    <div class="col-md-3">
-        <div class="card mb-4">
-            <img src="{{ product.image.url }}" class="card-img-top"
-                 style="height:250px;object-fit:cover;">
-            <div class="card-body">
-                <h5>
-                    <a href="{% url 'product_detail' product.slug %}">
-                        {{ product.name }}
-                    </a>
-                </h5>
-                <p class="text-danger fw-bold">
-                    {{ product.price }} VNĐ
-                </p>
+<section class="hero">
+    <div class="hero-card">
+        <span class="badge">Danh mục</span>
+        <h1>{{ category.name }}</h1>
+        <p>Khám phá các sản phẩm thuộc danh mục {{ category.name }} với ưu đãi cập nhật liên tục.</p>
+        <div class="hero-actions">
+            <a class="btn-primary" href="{% url 'home' %}">Về trang chủ</a>
+            <a class="btn-ghost" href="{% url 'search' %}?q=">Tìm sản phẩm khác</a>
+        </div>
+        <div class="stats">
+            <div class="stat">
+                <strong>{{ products|length }}</strong>
+                <span>Sản phẩm đang hiển thị</span>
+            </div>
+            <div class="stat">
+                <strong>Trả góp</strong>
+                <span>0% cho nhiều mẫu</span>
+            </div>
+            <div class="stat">
+                <strong>Giao nhanh</strong>
+                <span>Trong ngày nội thành</span>
             </div>
         </div>
     </div>
-    {% endfor %}
-</div>
+    <div class="hero-card">
+        <span class="badge">Lưu ý</span>
+        <h2>Chọn sản phẩm phù hợp</h2>
+        <p>So sánh cấu hình, dung lượng và màu sắc để chọn thiết bị tốt nhất.</p>
+        <div class="callout">
+            <strong>Tip: So sánh nhanh</strong>
+            <small>Nhấn vào từng sản phẩm để xem chi tiết và so sánh giá.</small>
+        </div>
+    </div>
+</section>
+
+<section class="card">
+    <div class="section-head">
+        <h2>Danh sách sản phẩm</h2>
+        <p class="helper">Chọn sản phẩm yêu thích và thêm vào giỏ.</p>
+    </div>
+    {% if products %}
+    <div class="product-grid">
+        {% for product in products %}
+        <article class="product-card">
+            <a class="product-media" href="{% url 'product_detail' product.slug %}">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            </a>
+            <div class="product-info">
+                <h3>{{ product.name }}</h3>
+                <div class="price-line">
+                    <span class="price">{{ product.price }} VNĐ</span>
+                    {% if product.old_price %}
+                    <span class="price-old">{{ product.old_price }} VNĐ</span>
+                    {% endif %}
+                </div>
+                <div class="product-actions">
+                    <a class="btn-ghost btn-sm" href="{% url 'product_detail' product.slug %}">Chi tiết</a>
+                    <a class="btn-primary btn-sm" href="{% url 'cart_add' product.id %}">Thêm vào giỏ</a>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">Chưa có sản phẩm trong danh mục này.</div>
+    {% endif %}
+</section>
 {% endblock %}
