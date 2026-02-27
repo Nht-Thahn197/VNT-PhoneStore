@@ -1,0 +1,26 @@
+<svg width="800" height="520" viewBox="0 0 800 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#fff1f3"/>
+            <stop offset="1" stop-color="#fff7e8"/>
+        </linearGradient>
+        <linearGradient id="screen" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ffffff"/>
+            <stop offset="1" stop-color="#ffe8ed"/>
+        </linearGradient>
+    </defs>
+    <rect x="0" y="0" width="800" height="520" rx="40" fill="url(#bg)"/>
+    <circle cx="120" cy="120" r="70" fill="#ffd5dc"/>
+    <circle cx="690" cy="390" r="90" fill="#ffe1c7"/>
+    <rect x="430" y="70" width="270" height="380" rx="40" fill="#ffffff" stroke="#f1d7dc" stroke-width="4"/>
+    <rect x="452" y="110" width="226" height="270" rx="28" fill="url(#screen)"/>
+    <rect x="530" y="90" width="70" height="12" rx="6" fill="#f0d7dc"/>
+    <circle cx="560" cy="412" r="20" fill="#f7e1e5"/>
+    <rect x="180" y="140" width="230" height="320" rx="36" fill="#ffffff" stroke="#f1d7dc" stroke-width="4"/>
+    <rect x="200" y="180" width="190" height="220" rx="24" fill="#fff6f0"/>
+    <rect x="255" y="160" width="80" height="12" rx="6" fill="#f0d7dc"/>
+    <circle cx="295" cy="425" r="18" fill="#ffe8ed"/>
+    <rect x="240" y="220" width="110" height="20" rx="10" fill="#ffd1d8"/>
+    <rect x="240" y="250" width="150" height="16" rx="8" fill="#ffe1c7"/>
+    <rect x="240" y="278" width="90" height="16" rx="8" fill="#ffd1d8"/>
+</svg>

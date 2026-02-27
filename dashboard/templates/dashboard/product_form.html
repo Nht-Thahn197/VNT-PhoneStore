@@ -1,0 +1,118 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Thêm sản phẩm | TechOne{% endblock %}
+{% block page_kicker %}Quản lý sản phẩm{% endblock %}
+{% block page_title %}Thêm sản phẩm{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-card">
+        <span class="badge">Dashboard quản trị</span>
+        <h1>Thêm sản phẩm mới</h1>
+        <p>Điền đầy đủ thông tin, giá bán, tồn kho và ảnh sản phẩm.</p>
+        <div class="hero-actions">
+            <a class="btn-primary" href="{% url 'product_list' %}">Xem danh sách sản phẩm</a>
+            <a class="btn-ghost" href="{% url 'dashboard_home' %}">Về Dashboard</a>
+        </div>
+    </div>
+    <div class="hero-card">
+        <span class="badge">Lưu ý</span>
+        <h2>Ảnh & mô tả</h2>
+        <p>Ảnh rõ nét giúp tăng tỷ lệ mua hàng.</p>
+        <div class="callout">
+            <strong>Tip</strong>
+            <small>Chuẩn bị ảnh nền sáng, tỉ lệ 1:1.</small>
+        </div>
+    </div>
+</section>
+
+<section class="grid">
+    <div class="card form-card">
+        <h2>Thông tin sản phẩm</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="product-name">Tên sản phẩm</label>
+                    <input id="product-name" type="text" name="name" placeholder="Ví dụ: iPhone 15 Pro" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-slug">Slug (tùy chọn)</label>
+                    <input id="product-slug" type="text" name="slug" placeholder="iphone-15-pro">
+                </div>
+                <div class="form-group">
+                    <label for="product-category">Hạng mục</label>
+                    <select id="product-category" name="category_id" required>
+                        <option value="">Chọn hạng mục</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="product-brand">Nhãn hàng</label>
+                    <select id="product-brand" name="brand_id" required>
+                        <option value="">Chọn nhãn hàng</option>
+                        {% for brand in brands %}
+                        <option value="{{ brand.id }}">{{ brand.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="product-price">Giá bán</label>
+                    <input id="product-price" type="number" name="price" placeholder="Giá bán" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-old-price">Giá niêm yết</label>
+                    <input id="product-old-price" type="number" name="old_price" placeholder="Giá cũ (nếu có)">
+                </div>
+                <div class="form-group">
+                    <label for="product-stock">Tồn kho</label>
+                    <input id="product-stock" type="number" name="stock" placeholder="Số lượng tồn" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-image">Ảnh sản phẩm</label>
+                    <input id="product-image" type="file" name="image" accept="image/*" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="product-description">Mô tả ngắn</label>
+                <textarea id="product-description" name="description" placeholder="Thông tin nổi bật..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="product-specs">Thông số kỹ thuật</label>
+                <textarea id="product-specs" name="specifications" placeholder="Ví dụ: RAM 8GB, ROM 256GB..."></textarea>
+            </div>
+
+            <div class="form-actions">
+                <label class="check">
+                    <input type="checkbox" name="is_active" checked>
+                    <span class="check-mark"></span>
+                    <span>Hiển thị sản phẩm</span>
+                </label>
+                <label class="check">
+                    <input type="checkbox" name="is_featured">
+                    <span class="check-mark"></span>
+                    <span>Sản phẩm nổi bật</span>
+                </label>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn-primary" type="submit">Lưu sản phẩm</button>
+                <a class="btn-ghost" href="{% url 'product_list' %}">Hủy</a>
+            </div>
+        </form>
+    </div>
+    <aside class="card tips">
+        <h3>Gợi ý nhanh</h3>
+        <p class="helper">Chuẩn hoá nội dung để tăng hiển thị.</p>
+        <ul class="chips">
+            <li class="chip">Ảnh sắc nét</li>
+            <li class="chip">Giá rõ ràng</li>
+            <li class="chip">Tồn kho chính xác</li>
+            <li class="chip">Slug dễ nhớ</li>
+        </ul>
+    </aside>
+</section>
+{% endblock %}

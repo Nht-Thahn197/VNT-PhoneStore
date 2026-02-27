@@ -1,0 +1,57 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Quản lý khách hàng | TechOne{% endblock %}
+{% block page_kicker %}Quản lý khách hàng{% endblock %}
+{% block page_title %}Danh sách khách hàng{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-card">
+        <span class="badge">Dashboard quản trị</span>
+        <h1>Quản lý khách hàng</h1>
+        <p>Tổng hợp tài khoản khách hàng đăng ký trên TechOne.</p>
+        <div class="hero-actions">
+            <a class="btn-ghost" href="{% url 'dashboard_home' %}">Về Dashboard</a>
+        </div>
+        <div class="stats">
+            <div class="stat">
+                <strong>{{ customers|length }}</strong>
+                <span>Khách hàng</span>
+            </div>
+        </div>
+    </div>
+    <div class="hero-card">
+        <span class="badge">Nhắc nhanh</span>
+        <h2>Chăm sóc khách hàng</h2>
+        <p>Ưu tiên liên hệ nhóm khách hàng mới để hỗ trợ mua sắm.</p>
+        <div class="callout">
+            <strong>Gợi ý</strong>
+            <small>Lưu số điện thoại và email để gửi ưu đãi.</small>
+        </div>
+    </div>
+</section>
+
+<section class="card">
+    <div class="section-head">
+        <h2>Danh sách khách hàng</h2>
+        <p class="helper">Sắp xếp theo thời gian đăng ký mới nhất.</p>
+    </div>
+    {% if customers %}
+    <ul class="list">
+        {% for customer in customers %}
+        <li class="list-item">
+            <div class="list-meta">
+                <strong>{{ customer.get_full_name|default:customer.username }}</strong>
+                <span>{{ customer.email|default:"--" }} · {{ customer.phone|default:customer.username }}</span>
+            </div>
+            <div class="list-actions">
+                <span class="helper">Ngày tạo: {{ customer.date_joined|date:"d/m/Y" }}</span>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div class="empty-state">Chưa có khách hàng nào.</div>
+    {% endif %}
+</section>
+{% endblock %}

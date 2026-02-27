@@ -1,5 +1,7 @@
 ﻿{% extends 'core/base.html' %}
 
+{% load price_filters %}
+
 {% block title %}Giỏ hàng | TechOne{% endblock %}
 
 {% block content %}
@@ -10,16 +12,16 @@
         <p>Danh sách sản phẩm bạn đã chọn để chuẩn bị thanh toán.</p>
         <div class="hero-actions">
             <a class="btn-primary" href="{% url 'home' %}">Tiếp tục mua sắm</a>
-            <a class="btn-ghost" href="#">Thanh toán</a>
+            <a class="btn-ghost" href="{% url 'checkout_info' %}">Thanh toán</a>
         </div>
         <div class="stats">
             <div class="stat">
-                <strong>{{ products|length }}</strong>
+                <strong class="cart-count">{{ cart.get_total_quantity }}</strong>
                 <span>Sản phẩm</span>
             </div>
             <div class="stat">
-                <strong>{{ cart.get_total_price|floatformat:0 }}</strong>
-                <span>Tạm tính (VNĐ)</span>
+                <strong class="cart-subtotal">0đ</strong>
+                <span>Tạm tính (đ)</span>
             </div>
         </div>
     </div>
@@ -39,22 +41,163 @@
         <h2>Sản phẩm trong giỏ</h2>
         <p class="helper">Kiểm tra lại trước khi thanh toán.</p>
     </div>
-    {% if products %}
-    <ul class="list">
-        {% for product in products %}
-        <li class="list-item">
-            <div class="list-meta">
-                <strong>{{ product.name }}</strong>
-                <span class="muted">{{ product.price }} VNĐ</span>
+    {% if cart.get_total_quantity %}
+    <div class="cart-select">
+        <label class="check">
+            <input id="cart-select-all" type="checkbox">
+            <span class="check-mark"></span>
+            <span>Chọn tất cả</span>
+        </label>
+    </div>
+    <div class="cart-list">
+        {% for item in cart %}
+        <article class="cart-item" data-product-id="{{ item.product.id }}" data-price="{{ item.product.price|floatformat:0 }}" data-qty="{{ item.quantity }}">
+            <label class="check cart-check">
+                <input class="cart-select-item" type="checkbox">
+                <span class="check-mark"></span>
+            </label>
+            <a class="cart-media" href="{% url 'product_detail' item.product.slug %}">
+                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+            </a>
+            <div class="cart-info">
+                <h3>{{ item.product.name }}</h3>
+                <div class="price-line">
+                    <span class="price">{{ item.product.price|format_vnd }}</span>
+                    {% if item.product.old_price %}
+                    <span class="price-old">{{ item.product.old_price|format_vnd }}</span>
+                    {% endif %}
+                </div>
             </div>
-        </li>
+            <div class="cart-qty">
+                <a class="qty-btn" data-action="decrease" href="{% url 'cart_decrease' item.product.id %}">-</a>
+                <span class="qty-value">{{ item.quantity }}</span>
+                <a class="qty-btn" data-action="increase" href="{% url 'cart_add' item.product.id %}">+</a>
+            </div>
+            <a class="cart-remove" data-action="remove" href="{% url 'cart_remove' item.product.id %}" aria-label="Xóa {{ item.product.name }}">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M3 6h18" />
+                    <path d="M8 6V4h8v2" />
+                    <path d="M7 6l1 14h8l1-14" />
+                </svg>
+            </a>
+        </article>
         {% endfor %}
-    </ul>
+    </div>
     <div class="form-actions">
-        <strong>Tổng tiền: {{ cart.get_total_price|floatformat:0 }} VNĐ</strong>
+        <strong>Tổng tiền: <span class="cart-total">0đ</span></strong>
     </div>
     {% else %}
     <div class="empty-state">Giỏ hàng trống. Hãy thêm sản phẩm để tiếp tục.</div>
     {% endif %}
 </section>
+
+<script>
+(() => {
+    const selectAll = document.getElementById("cart-select-all");
+    const list = document.querySelector(".cart-list");
+    if (!list) return;
+
+    const formatVnd = (value) => {
+        const rounded = Math.round(value || 0);
+        return `${rounded}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "đ";
+    };
+
+    const getItems = () => Array.from(document.querySelectorAll(".cart-item"));
+    const getSelectedItems = () =>
+        getItems().filter((item) => item.querySelector(".cart-select-item")?.checked);
+
+    const updateSubtotal = () => {
+        const sum = getSelectedItems().reduce((total, item) => {
+            const price = parseInt((item.dataset.price || "0").replace(/[^\d]/g, ""), 10) || 0;
+            const qty = Number(item.dataset.qty || 0);
+            return total + price * qty;
+        }, 0);
+        document.querySelectorAll(".cart-subtotal").forEach((el) => {
+            el.textContent = formatVnd(sum);
+        });
+        document.querySelectorAll(".cart-total").forEach((el) => {
+            el.textContent = formatVnd(sum);
+        });
+    };
+
+    const updateCount = () => {
+        const totalQty = getItems().reduce((total, item) => {
+            const qty = Number(item.dataset.qty || 0);
+            return total + qty;
+        }, 0);
+        document.querySelectorAll(".cart-count").forEach((el) => {
+            el.textContent = totalQty;
+        });
+    };
+
+    const syncSelectAll = () => {
+        if (!selectAll) return;
+        const items = getItems();
+        selectAll.checked = items.length > 0 && items.every((item) => item.querySelector(".cart-select-item")?.checked);
+    };
+
+    if (selectAll) {
+        selectAll.addEventListener("change", () => {
+            getItems().forEach((item) => {
+                const checkbox = item.querySelector(".cart-select-item");
+                if (checkbox) {
+                    checkbox.checked = selectAll.checked;
+                }
+            });
+            updateSubtotal();
+        });
+    }
+
+    list.addEventListener("change", (event) => {
+        if (!event.target.classList.contains("cart-select-item")) return;
+        syncSelectAll();
+        updateSubtotal();
+    });
+
+    list.addEventListener("click", async (event) => {
+        const actionBtn = event.target.closest("a[data-action]");
+        if (!actionBtn) return;
+        event.preventDefault();
+
+        const item = actionBtn.closest(".cart-item");
+        if (!item) return;
+
+        const action = actionBtn.dataset.action;
+        let qty = Number(item.dataset.qty || 0);
+
+        try {
+            await fetch(actionBtn.href, {
+                headers: { "X-Requested-With": "XMLHttpRequest" },
+                credentials: "same-origin",
+            });
+        } catch (error) {
+        }
+
+        if (action === "increase") {
+            qty += 1;
+        } else if (action === "decrease") {
+            qty -= 1;
+        } else if (action === "remove") {
+            qty = 0;
+        }
+
+        if (qty <= 0) {
+            item.remove();
+        } else {
+            item.dataset.qty = `${qty}`;
+            const qtyValue = item.querySelector(".qty-value");
+            if (qtyValue) {
+                qtyValue.textContent = qty;
+            }
+        }
+
+        syncSelectAll();
+        updateSubtotal();
+        updateCount();
+    });
+
+    updateSubtotal();
+    updateCount();
+})();
+</script>
 {% endblock %}

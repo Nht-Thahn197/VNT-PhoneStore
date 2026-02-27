@@ -1,0 +1,314 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+.dashboard-body {
+    --admin-bg: #f2f4f8;
+    --admin-surface: #ffffff;
+    --admin-ink: #10131a;
+    --admin-muted: #5b6574;
+    --admin-border: #e1e7ef;
+    --admin-accent: #ff6a3d;
+    --admin-accent-soft: #ffe6dd;
+    --admin-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+
+    margin: 0;
+    background: radial-gradient(800px 420px at 10% -10%, #fff2e8 0%, rgba(255, 242, 232, 0) 70%),
+        radial-gradient(900px 380px at 90% -20%, #e7f0ff 0%, rgba(231, 240, 255, 0) 70%),
+        var(--admin-bg);
+    color: var(--admin-ink);
+    font-family: "Space Grotesk", "Segoe UI", sans-serif;
+}
+
+.dashboard-body::before {
+    content: none;
+}
+
+.dashboard-shell {
+    display: grid;
+    grid-template-columns: 270px 1fr;
+    min-height: 100vh;
+}
+
+.dashboard-sidebar {
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 26px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    border-right: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-mark {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #ff6a3d, #f59e0b);
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.brand-meta strong {
+    display: block;
+    font-size: 16px;
+}
+
+.brand-meta span {
+    font-size: 12px;
+    color: rgba(226, 232, 240, 0.7);
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-radius: 12px;
+    color: #e2e8f0;
+    font-size: 14px;
+    text-decoration: none;
+    background: rgba(148, 163, 184, 0.08);
+    border: 1px solid transparent;
+    transition: 0.2s ease;
+}
+
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
+    background: rgba(255, 106, 61, 0.16);
+    border-color: rgba(255, 106, 61, 0.4);
+    color: #fff;
+}
+
+.sidebar-nav a.is-placeholder {
+    opacity: 0.75;
+    cursor: default;
+}
+
+.sidebar-panel {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 16px;
+    padding: 14px;
+}
+
+.sidebar-panel h4 {
+    margin: 0 0 6px;
+    font-size: 13px;
+    color: #f8fafc;
+}
+
+.sidebar-panel p {
+    margin: 0;
+    font-size: 12px;
+    color: rgba(226, 232, 240, 0.7);
+    line-height: 1.5;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    border-top: 1px solid rgba(148, 163, 184, 0.2);
+    padding-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sidebar-user {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.sidebar-user strong {
+    font-size: 14px;
+}
+
+.sidebar-user span {
+    font-size: 12px;
+    color: rgba(226, 232, 240, 0.7);
+}
+
+.sidebar-logout {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dashboard-main {
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-topbar {
+    background: var(--admin-surface);
+    border-bottom: 1px solid var(--admin-border);
+    padding: 22px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.topbar-title span {
+    display: block;
+    font-size: 12px;
+    color: var(--admin-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.topbar-title h1 {
+    margin: 6px 0 0;
+    font-size: 24px;
+}
+
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.topbar-search input {
+    min-width: 280px;
+    border-radius: 999px;
+    border: 1px solid var(--admin-border);
+    padding: 10px 16px;
+    background: #f9fafb;
+}
+
+.topbar-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-size: 12px;
+    color: var(--admin-muted);
+}
+
+.topbar-meta strong {
+    font-size: 14px;
+    color: var(--admin-ink);
+}
+
+.dashboard-content {
+    padding: 28px 32px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.dashboard-body .card,
+.dashboard-body .hero-card,
+.dashboard-body .stat,
+.dashboard-body .list-item,
+.dashboard-body .policy {
+    border: 1px solid var(--admin-border);
+    box-shadow: var(--admin-shadow);
+    background: var(--admin-surface);
+}
+
+.dashboard-body .hero-card {
+    background: linear-gradient(135deg, #ffffff, #fff7f3);
+}
+
+.dashboard-body .badge {
+    background: var(--admin-accent-soft);
+    color: var(--admin-accent);
+}
+
+.dashboard-body .btn-primary {
+    background: var(--admin-accent);
+    box-shadow: 0 14px 30px rgba(255, 106, 61, 0.3);
+}
+
+.dashboard-body .btn-primary:hover {
+    background: #ff4f1f;
+}
+
+.dashboard-body .btn-ghost {
+    background: #fff;
+    border-color: var(--admin-border);
+}
+
+.dashboard-body .chip {
+    background: #f8fafc;
+    border: 1px solid var(--admin-border);
+}
+
+.dashboard-body .callout {
+    background: #0f172a;
+}
+
+.dashboard-body footer {
+    color: var(--admin-muted);
+    padding-bottom: 20px;
+}
+
+@media (max-width: 1100px) {
+    .dashboard-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-sidebar {
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .sidebar-nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .sidebar-footer {
+        border-top: 0;
+        padding-top: 0;
+        margin-top: 0;
+    }
+
+    .topbar-search input {
+        min-width: 220px;
+    }
+}
+
+@media (max-width: 760px) {
+    .dashboard-topbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .topbar-actions {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .topbar-search {
+        width: 100%;
+    }
+
+    .topbar-search input {
+        width: 100%;
+        min-width: unset;
+    }
+}

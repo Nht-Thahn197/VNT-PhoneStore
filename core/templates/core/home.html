@@ -1,70 +1,64 @@
 ﻿{% extends 'core/base.html' %}
+{% load static price_filters %}
 
 {% block title %}Trang chủ | TechOne{% endblock %}
 
 {% block content %}
-<section class="hero">
-    <div class="hero-card">
-        <span class="badge">TechOne</span>
-        <h1>Điện thoại chính hãng, giá tốt mỗi ngày</h1>
-        <p>Khám phá các sản phẩm nổi bật, ưu đãi rõ ràng và trải nghiệm mua sắm nhanh gọn.</p>
-        <div class="hero-actions">
-            <a class="btn-primary" href="{% url 'search' %}?q=">Tìm nhanh</a>
-            <a class="btn-ghost" href="#">Xem khuyến mãi</a>
-        </div>
-        <div class="stats">
-            <div class="stat">
-                <strong>{{ products|length }}</strong>
-                <span>Sản phẩm nổi bật</span>
+<section class="home-banner">
+    <div class="home-banner__media">
+        <div class="banner-slider" aria-label="Banner ưu đãi TechOne">
+            <button class="banner-nav banner-prev" type="button" aria-label="Banner trước">‹</button>
+            <button class="banner-nav banner-next" type="button" aria-label="Banner sau">›</button>
+            <div class="banner-track">
+                <img src="{% static 'core/images/banner1.png' %}" alt="Banner ưu đãi 1" loading="eager" decoding="async">
+                <img src="{% static 'core/images/banner2.png' %}" alt="Banner ưu đãi 2" loading="lazy" decoding="async">
+                <img src="{% static 'core/images/banner3.png' %}" alt="Banner ưu đãi 3" loading="lazy" decoding="async">
+                <img src="{% static 'core/images/banner4.png' %}" alt="Banner ưu đãi 4" loading="lazy" decoding="async">
+                <img src="{% static 'core/images/banner5.png' %}" alt="Banner ưu đãi 5" loading="lazy" decoding="async">
+                <img src="{% static 'core/images/banner6.png' %}" alt="Banner ưu đãi 6" loading="lazy" decoding="async">
+                <img src="{% static 'core/images/banner7.png' %}" alt="Banner ưu đãi 7" loading="lazy" decoding="async">
             </div>
-            <div class="stat">
-                <strong>24h</strong>
-                <span>Giao nhanh nội thành</span>
-            </div>
-            <div class="stat">
-                <strong>1-1</strong>
-                <span>Hỗ trợ đổi trả</span>
-            </div>
-        </div>
-    </div>
-    <div class="hero-card">
-        <span class="badge">Gợi ý hôm nay</span>
-        <h2>Ưu đãi theo danh mục</h2>
-        <p>Chọn nhanh nhóm sản phẩm bạn quan tâm, chúng tôi đã tối ưu sẵn trải nghiệm.</p>
-        <div class="callout">
-            <strong>Tip: Lọc nhanh theo nhu cầu</strong>
-            <small>Vào danh mục và lọc theo giá, dung lượng hoặc thương hiệu.</small>
         </div>
     </div>
 </section>
 
-<section class="card">
-    <div class="section-head">
-        <h2>Sản phẩm nổi bật</h2>
-        <p class="helper">Chọn lọc từ TechOne để bạn mua sắm nhanh hơn.</p>
+<section class="card featured-section">
+    <div class="section-head section-head--row">
+        <div>
+            <h2>Sản phẩm nổi bật</h2>
+            <p class="helper">Chọn lọc từ TechOne để bạn mua sắm nhanh hơn.</p>
+        </div>
     </div>
     {% if products %}
-    <div class="product-grid">
-        {% for product in products %}
-        <article class="product-card">
-            <a class="product-media" href="{% url 'product_detail' product.slug %}">
-                <img src="{{ product.image.url }}" alt="{{ product.name }}">
-            </a>
-            <div class="product-info">
-                <h3>{{ product.name }}</h3>
-                <div class="price-line">
-                    <span class="price">{{ product.price }} VNĐ</span>
-                    {% if product.old_price %}
-                    <span class="price-old">{{ product.old_price }} VNĐ</span>
-                    {% endif %}
-                </div>
-                <div class="product-actions">
-                    <a class="btn-ghost btn-sm" href="{% url 'product_detail' product.slug %}">Chi tiết</a>
-                    <a class="btn-primary btn-sm" href="{% url 'cart_add' product.id %}">Thêm vào giỏ</a>
-                </div>
+    <div class="featured-carousel-wrap">
+        {% if products|length > 5 %}
+        <button class="featured-nav featured-prev" type="button" aria-label="Xem sản phẩm trước">‹</button>
+        <button class="featured-nav featured-next" type="button" aria-label="Xem sản phẩm sau">›</button>
+        {% endif %}
+        <div class="featured-carousel">
+            <div class="featured-track">
+                {% for product in products %}
+                <article class="product-card">
+                    <a class="product-media" href="{% url 'product_detail' product.slug %}">
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    </a>
+                    <div class="product-info">
+                        <h3>{{ product.name }}</h3>
+                        <div class="price-line">
+                            <span class="price">{{ product.price|format_vnd }}</span>
+                            {% if product.old_price %}
+                            <span class="price-old">{{ product.old_price|format_vnd }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="product-actions">
+                            <a class="btn-ghost btn-sm" href="{% url 'product_detail' product.slug %}">Chi tiết</a>
+                            <a class="btn-primary btn-sm" href="{% url 'cart_add' product.id %}">Thêm vào giỏ</a>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
             </div>
-        </article>
-        {% endfor %}
+        </div>
     </div>
     {% else %}
     <div class="empty-state">Hiện chưa có sản phẩm nổi bật.</div>
@@ -76,4 +70,101 @@
     <div class="policy-item"><span class="policy-dot"></span>Hỗ trợ đổi trả nhanh trong 7 ngày</div>
     <div class="policy-item"><span class="policy-dot"></span>Cam kết hàng chính hãng, bảo hành đầy đủ</div>
 </section>
+
+<script>
+(() => {
+    const slider = document.querySelector(".banner-slider");
+    if (!slider) return;
+
+    const track = slider.querySelector(".banner-track");
+    const slides = Array.from(track.querySelectorAll("img"));
+    const total = slides.length;
+    const prevBtn = slider.querySelector(".banner-prev");
+    const nextBtn = slider.querySelector(".banner-next");
+    let index = 0;
+    let timer = null;
+
+    const update = () => {
+        const offset = (100 / total) * index;
+        track.style.transform = `translateX(-${offset}%)`;
+    };
+
+    const next = () => {
+        index = (index + 1) % total;
+        update();
+    };
+
+    const prev = () => {
+        index = (index - 1 + total) % total;
+        update();
+    };
+
+    const start = () => {
+        stop();
+        timer = setInterval(next, 3000);
+    };
+
+    const stop = () => {
+        if (timer) {
+            clearInterval(timer);
+            timer = null;
+        }
+    };
+
+    prevBtn.addEventListener("click", () => {
+        stop();
+        prev();
+        start();
+    });
+
+    nextBtn.addEventListener("click", () => {
+        stop();
+        next();
+        start();
+    });
+
+    slider.addEventListener("mouseenter", stop);
+    slider.addEventListener("mouseleave", start);
+
+    slider.style.setProperty("--banner-count", total);
+    update();
+    start();
+})();
+
+(() => {
+    const wrap = document.querySelector(".featured-carousel-wrap");
+    if (!wrap) return;
+
+    const carousel = wrap.querySelector(".featured-carousel");
+    if (!carousel) return;
+
+    const track = carousel.querySelector(".featured-track");
+    const cards = track.querySelectorAll(".product-card");
+    if (cards.length <= 5) return;
+
+    const prevBtn = wrap.querySelector(".featured-prev");
+    const nextBtn = wrap.querySelector(".featured-next");
+    if (!prevBtn || !nextBtn) return;
+
+    const getStep = () => carousel.clientWidth;
+
+    const updateButtons = () => {
+        const maxScroll = carousel.scrollWidth - carousel.clientWidth - 1;
+        prevBtn.disabled = carousel.scrollLeft <= 0;
+        nextBtn.disabled = carousel.scrollLeft >= maxScroll;
+    };
+
+    prevBtn.addEventListener("click", () => {
+        carousel.scrollBy({ left: -getStep(), behavior: "smooth" });
+    });
+
+    nextBtn.addEventListener("click", () => {
+        carousel.scrollBy({ left: getStep(), behavior: "smooth" });
+    });
+
+    carousel.addEventListener("scroll", updateButtons);
+    window.addEventListener("resize", updateButtons);
+    updateButtons();
+})();
+</script>
 {% endblock %}

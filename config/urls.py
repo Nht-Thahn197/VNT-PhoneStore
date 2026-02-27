@@ -12,11 +12,14 @@ from core.views import home, product_detail, category_detail, search
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('account/', include('accounts.urls')),
     path('', home, name='home'),
     path('product/<slug:slug>/', product_detail, name='product_detail'),
     path('search/', search, name='search'),
     path('', cart_detail, name='cart_detail'),
     path('add/<int:product_id>/', add_to_cart, name='add_to_cart'),
+    path('checkout/', views.checkout_info, name='checkout_info'),
+    path('checkout/payment/', views.checkout_payment, name='checkout_payment'),
     path('cart/', include('cart.urls')),
     path('cart/', views.cart_detail, name='cart'),
     path('cart/add/<int:product_id>/', views.cart_add, name='cart_add'),

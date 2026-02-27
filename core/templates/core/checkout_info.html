@@ -1,0 +1,169 @@
+{% extends 'core/base.html' %}
+{% load price_filters %}
+
+{% block title %}Thông tin | TechOne{% endblock %}
+
+{% block content %}
+<section class="checkout-steps">
+    <div class="checkout-step active">
+        <span class="step-index">1</span>
+        <span class="step-label">THÔNG TIN</span>
+    </div>
+    <div class="checkout-step">
+        <span class="step-index">2</span>
+        <span class="step-label">THANH TOÁN</span>
+    </div>
+</section>
+
+<section class="grid checkout-grid">
+    <div class="card">
+        <div class="section-head">
+            <h2>Thông tin đơn hàng</h2>
+            <p class="helper">Kiểm tra sản phẩm và điền thông tin nhận hàng.</p>
+        </div>
+
+        {% if cart.get_total_quantity %}
+        <ul class="list">
+            {% for item in cart %}
+            <li class="list-item">
+                <div class="list-meta">
+                    <strong>{{ item.product.name }}</strong>
+                    <span>{{ item.quantity }} x {{ item.product.price|format_vnd }}</span>
+                </div>
+                <div class="price">{{ item.total_price|format_vnd }}</div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div class="empty-state">Giỏ hàng đang trống. Vui lòng thêm sản phẩm trước khi thanh toán.</div>
+        {% endif %}
+
+        <div class="section-head">
+            <h3>Thông tin khách hàng</h3>
+            <p class="helper">Dùng thông tin này để liên hệ và gửi hoá đơn.</p>
+        </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="customer-name">Họ và tên</label>
+                <input id="customer-name" type="text" value="{{ user.get_full_name|default:user.username }}" placeholder="Nguyễn Văn A">
+            </div>
+            <div class="form-group">
+                <label for="customer-phone">Số điện thoại</label>
+                <input id="customer-phone" type="tel" placeholder="0123 456 789">
+            </div>
+            <div class="form-group">
+                <label for="customer-email">Email</label>
+                <input id="customer-email" type="email" value="{{ user.email|default:'' }}" placeholder="email@example.com">
+            </div>
+        </div>
+
+        <div class="section-head">
+            <h3>Thông tin nhận hàng</h3>
+            <p class="helper">Chọn hình thức nhận hàng phù hợp.</p>
+        </div>
+        <div class="radio-group">
+            <label class="radio-card">
+                <input type="radio" name="delivery" checked>
+                <span>Giao hàng tận nơi</span>
+            </label>
+            <label class="radio-card">
+                <input type="radio" name="delivery">
+                <span>Nhận tại cửa hàng</span>
+            </label>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="city">Tỉnh / Thành phố</label>
+                <select id="city">
+                    <option>Hà Nội</option>
+                    <option>Hồ Chí Minh</option>
+                    <option>Đà Nẵng</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="district">Quận / Huyện</label>
+                <select id="district">
+                    <option>Quận Hà Đông</option>
+                    <option>Quận 1</option>
+                    <option>Quận Hải Châu</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="ward">Phường / Xã</label>
+                <select id="ward">
+                    <option>Phường Yên Nghĩa</option>
+                    <option>Phường Bến Nghé</option>
+                    <option>Phường Hải Châu 1</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="address">Địa chỉ nhận hàng</label>
+                <input id="address" type="text" placeholder="Số nhà, tên đường, tòa nhà...">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="delivery-time">Thời gian giao hàng</label>
+            <select id="delivery-time">
+                <option>Giao siêu tốc: trước 14 giờ 30 phút ngày {{ today|date:"d/m/Y" }}</option>
+                <option>Giao trong ngày</option>
+                <option>Giao tiết kiệm (2-3 ngày)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="note">Ghi chú khác (nếu có)</label>
+            <textarea id="note" placeholder="Ví dụ: giao giờ hành chính"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Quý khách có muốn xuất hoá đơn công ty không?</label>
+            <div class="radio-group">
+                <label class="radio-card">
+                    <input type="radio" name="invoice">
+                    <span>Có</span>
+                </label>
+                <label class="radio-card">
+                    <input type="radio" name="invoice" checked>
+                    <span>Không</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="checkout-actions">
+            <div class="summary-total">
+                <span>Tổng tiền tạm tính</span>
+                <strong>{{ total|format_vnd }}</strong>
+            </div>
+            <a class="btn-primary" href="{% url 'checkout_payment' %}">Tiếp tục</a>
+            <a class="btn-ghost" href="{% url 'cart' %}">Quay lại giỏ hàng</a>
+        </div>
+    </div>
+
+    <aside class="card">
+        <div class="section-head">
+            <h3>Tóm tắt thanh toán</h3>
+            <p class="helper">Kiểm tra lại trước khi chuyển bước.</p>
+        </div>
+        <div class="summary-card">
+            <div class="summary-line">
+                <span>Số lượng sản phẩm</span>
+                <strong>{{ cart.get_total_quantity }}</strong>
+            </div>
+            <div class="summary-line">
+                <span>Tạm tính</span>
+                <strong>{{ subtotal|format_vnd }}</strong>
+            </div>
+            <div class="summary-line">
+                <span>Phí vận chuyển</span>
+                <strong>{% if shipping %}{{ shipping|format_vnd }}{% else %}Miễn phí{% endif %}</strong>
+            </div>
+            <div class="summary-line">
+                <span>Giảm giá trực tiếp</span>
+                <strong>-{{ discount|format_vnd }}</strong>
+            </div>
+        </div>
+    </aside>
+</section>
+{% endblock %}

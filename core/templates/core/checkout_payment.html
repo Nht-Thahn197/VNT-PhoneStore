@@ -1,0 +1,119 @@
+{% extends 'core/base.html' %}
+{% load price_filters %}
+
+{% block title %}Thanh toán | TechOne{% endblock %}
+
+{% block content %}
+<section class="checkout-steps">
+    <div class="checkout-step done">
+        <span class="step-index">1</span>
+        <span class="step-label">THÔNG TIN</span>
+    </div>
+    <div class="checkout-step active">
+        <span class="step-index">2</span>
+        <span class="step-label">THANH TOÁN</span>
+    </div>
+</section>
+
+<section class="grid checkout-grid">
+    <div class="card">
+        <div class="section-head">
+            <h2>Thanh toán</h2>
+            <p class="helper">Chọn phương thức thanh toán và xác nhận đơn hàng.</p>
+        </div>
+
+        <div class="form-group">
+            <label for="coupon">Nhập mã giảm giá (chỉ áp dụng 1 lần)</label>
+            <div class="form-row">
+                <input id="coupon" type="text" placeholder="TECHONE2026">
+                <button class="btn-ghost" type="button">Áp dụng</button>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-line">
+                <span>Số lượng sản phẩm</span>
+                <strong>{{ cart.get_total_quantity }}</strong>
+            </div>
+            <div class="summary-line">
+                <span>Tổng tiền hàng</span>
+                <strong>{{ subtotal|format_vnd }}</strong>
+            </div>
+            <div class="summary-line">
+                <span>Phí vận chuyển</span>
+                <strong>{% if shipping %}{{ shipping|format_vnd }}{% else %}Miễn phí{% endif %}</strong>
+            </div>
+            <div class="summary-line">
+                <span>Giảm giá trực tiếp</span>
+                <strong>-{{ discount|format_vnd }}</strong>
+            </div>
+        </div>
+
+        <div class="section-head">
+            <h3>Thông tin thanh toán</h3>
+            <p class="helper">Chọn phương thức thanh toán phù hợp.</p>
+        </div>
+        <div class="payment-list">
+            <label class="payment-option">
+                <input type="radio" name="payment" checked>
+                <div>
+                    <strong>Thanh toán khi nhận hàng (COD)</strong>
+                    <span>Nhận hàng rồi mới thanh toán, an tâm tối đa.</span>
+                </div>
+            </label>
+            <label class="payment-option">
+                <input type="radio" name="payment">
+                <div>
+                    <strong>Thẻ ATM / Ví điện tử</strong>
+                    <span>Thanh toán nhanh qua MoMo, ZaloPay, VNPAY...</span>
+                </div>
+            </label>
+            <label class="payment-option">
+                <input type="radio" name="payment">
+                <div>
+                    <strong>Chuyển khoản ngân hàng</strong>
+                    <span>Nhận thông tin tài khoản sau khi đặt hàng.</span>
+                </div>
+            </label>
+        </div>
+
+        <div class="section-head">
+            <h3>Thông tin nhận hàng</h3>
+            <p class="helper">Kiểm tra lại trước khi xác nhận.</p>
+        </div>
+        <div class="summary-card">
+            <div class="summary-line">
+                <span>Khách hàng</span>
+                <strong>{{ user.get_full_name|default:user.username }}</strong>
+            </div>
+            <div class="summary-line">
+                <span>Email</span>
+                <strong>{{ user.email|default:"--" }}</strong>
+            </div>
+            <div class="summary-line">
+                <span>Nhận hàng tại</span>
+                <strong>Địa chỉ đã chọn ở bước trước</strong>
+            </div>
+            <div class="summary-line">
+                <span>Người nhận</span>
+                <strong>{{ user.get_full_name|default:user.username }}</strong>
+            </div>
+        </div>
+
+        <label class="check terms-check">
+            <input type="checkbox" checked>
+            <span class="check-mark"></span>
+            <span>Bằng việc đặt hàng, bạn đồng ý với Điều khoản sử dụng của TechOne.</span>
+        </label>
+    </div>
+
+    <aside class="card checkout-aside">
+        <div class="summary-total">
+            <span>Tổng tiền tạm tính</span>
+            <strong>{{ total|format_vnd }}</strong>
+        </div>
+        <button class="btn-primary btn-full" type="button">Thanh toán</button>
+        <a class="btn-ghost btn-full" href="{% url 'cart' %}">Kiểm tra danh sách sản phẩm ({{ cart.get_total_quantity }})</a>
+    </aside>
+</section>
+{% endblock %}

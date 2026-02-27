@@ -1,50 +1,17 @@
 ﻿{% extends 'core/base.html' %}
 
+{% load price_filters %}
+
 {% block title %}{{ category.name }} | TechOne{% endblock %}
 
 {% block content %}
-<section class="hero">
-    <div class="hero-card">
-        <span class="badge">Danh mục</span>
-        <h1>{{ category.name }}</h1>
-        <p>Khám phá các sản phẩm thuộc danh mục {{ category.name }} với ưu đãi cập nhật liên tục.</p>
-        <div class="hero-actions">
-            <a class="btn-primary" href="{% url 'home' %}">Về trang chủ</a>
-            <a class="btn-ghost" href="{% url 'search' %}?q=">Tìm sản phẩm khác</a>
-        </div>
-        <div class="stats">
-            <div class="stat">
-                <strong>{{ products|length }}</strong>
-                <span>Sản phẩm đang hiển thị</span>
-            </div>
-            <div class="stat">
-                <strong>Trả góp</strong>
-                <span>0% cho nhiều mẫu</span>
-            </div>
-            <div class="stat">
-                <strong>Giao nhanh</strong>
-                <span>Trong ngày nội thành</span>
-            </div>
-        </div>
-    </div>
-    <div class="hero-card">
-        <span class="badge">Lưu ý</span>
-        <h2>Chọn sản phẩm phù hợp</h2>
-        <p>So sánh cấu hình, dung lượng và màu sắc để chọn thiết bị tốt nhất.</p>
-        <div class="callout">
-            <strong>Tip: So sánh nhanh</strong>
-            <small>Nhấn vào từng sản phẩm để xem chi tiết và so sánh giá.</small>
-        </div>
-    </div>
-</section>
-
 <section class="card">
     <div class="section-head">
-        <h2>Danh sách sản phẩm</h2>
+        <h2>Điện thoại {{ category.name }}</h2>
         <p class="helper">Chọn sản phẩm yêu thích và thêm vào giỏ.</p>
     </div>
     {% if products %}
-    <div class="product-grid">
+    <div class="product-grid product-grid--five">
         {% for product in products %}
         <article class="product-card">
             <a class="product-media" href="{% url 'product_detail' product.slug %}">
@@ -53,9 +20,9 @@
             <div class="product-info">
                 <h3>{{ product.name }}</h3>
                 <div class="price-line">
-                    <span class="price">{{ product.price }} VNĐ</span>
+                    <span class="price">{{ product.price|format_vnd }}</span>
                     {% if product.old_price %}
-                    <span class="price-old">{{ product.old_price }} VNĐ</span>
+                    <span class="price-old">{{ product.old_price|format_vnd }}</span>
                     {% endif %}
                 </div>
                 <div class="product-actions">

@@ -1,8 +1,10 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from products.models import Product
 from django.shortcuts import get_object_or_404
 from products.models import Category
 from django.db.models import Q
+from django.utils import timezone
 from .cart import Cart
 
 def home(request):
@@ -38,11 +40,13 @@ def search(request):
         'query': query
     })
 
+@login_required
 def cart_detail(request):
     cart = Cart(request)
     return render(request, 'cart.html', {'cart': cart})
 
 
+@login_required
 def cart_add(request, product_id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
@@ -50,6 +54,7 @@ def cart_add(request, product_id):
     return redirect('cart')
 
 
+@login_required
 def cart_decrease(request, product_id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
@@ -57,8 +62,45 @@ def cart_decrease(request, product_id):
     return redirect('cart')
 
 
+@login_required
 def cart_remove(request, product_id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
     cart.remove(product)
     return redirect('cart')
+
+
+@login_required
+def checkout_info(request):
+    cart = Cart(request)
+    subtotal = cart.get_total_price()
+    discount = 0
+    shipping = 0
+    total = max(subtotal - discount, 0) + shipping
+    context = {
+        "cart": cart,
+        "subtotal": subtotal,
+        "discount": discount,
+        "shipping": shipping,
+        "total": total,
+        "today": timezone.localdate(),
+    }
+    return render(request, "core/checkout_info.html", context)
+
+
+@login_required
+def checkout_payment(request):
+    cart = Cart(request)
+    subtotal = cart.get_total_price()
+    discount = 0
+    shipping = 0
+    total = max(subtotal - discount, 0) + shipping
+    context = {
+        "cart": cart,
+        "subtotal": subtotal,
+        "discount": discount,
+        "shipping": shipping,
+        "total": total,
+        "today": timezone.localdate(),
+    }
+    return render(request, "core/checkout_payment.html", context)

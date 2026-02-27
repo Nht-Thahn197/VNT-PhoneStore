@@ -1,0 +1,88 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Đăng ký | TechOne{% endblock %}
+
+{% block content %}
+<section class="card register-card">
+    <span class="badge">Tạo tài khoản</span>
+    <h2>Đăng ký</h2>
+    <p class="helper">Điền thông tin để bắt đầu mua sắm và nhận ưu đãi thành viên.</p>
+
+    {% if gate_message %}
+    <div class="alert">{{ gate_message }}</div>
+    {% endif %}
+
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+        {% endfor %}
+        <input type="hidden" name="next" value="{{ next|default:'' }}">
+
+        <div class="section-head">
+            <h3>Thông tin cá nhân</h3>
+        </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="{{ form.full_name.id_for_label }}">Họ và tên</label>
+                {{ form.full_name }}
+                {% if form.full_name.errors %}
+                <div class="form-error">{{ form.full_name.errors.0 }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.birth_date.id_for_label }}">Ngày sinh</label>
+                {{ form.birth_date }}
+                {% if form.birth_date.errors %}
+                <div class="form-error">{{ form.birth_date.errors.0 }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.phone.id_for_label }}">Số điện thoại</label>
+                {{ form.phone }}
+                {% if form.phone.errors %}
+                <div class="form-error">{{ form.phone.errors.0 }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">Email <span class="text-muted">(Không bắt buộc)</span></label>
+                {{ form.email }}
+                <div class="helper helper-success">Hóa đơn VAT khi mua hàng sẽ được gửi qua email này.</div>
+                {% if form.email.errors %}
+                <div class="form-error">{{ form.email.errors.0 }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="section-head">
+            <h3>Tạo mật khẩu</h3>
+        </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="{{ form.password1.id_for_label }}">Mật khẩu</label>
+                {{ form.password1 }}
+                {% if form.password1.errors %}
+                <div class="form-error">{{ form.password1.errors.0 }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.password2.id_for_label }}">Nhập lại mật khẩu</label>
+                {{ form.password2 }}
+                {% if form.password2.errors %}
+                <div class="form-error">{{ form.password2.errors.0 }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button class="btn-primary" type="submit">Tạo tài khoản</button>
+            <a class="btn-ghost" href="{% url 'home' %}">Về trang chủ</a>
+            <a class="btn-ghost" href="{% url 'login' %}{% if next %}?next={{ next }}{% endif %}">Đăng nhập</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

@@ -131,6 +131,10 @@ STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'accounts.User'
 
+LOGIN_URL = '/account/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
 import os
 
 MEDIA_URL = '/media/'

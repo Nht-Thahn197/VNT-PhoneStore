@@ -1,5 +1,7 @@
 ﻿{% extends 'core/base.html' %}
 
+{% load price_filters %}
+
 {% block title %}{{ product.name }} | TechOne{% endblock %}
 
 {% block content %}
@@ -11,9 +13,9 @@
         <span class="badge">Chi tiết sản phẩm</span>
         <h1>{{ product.name }}</h1>
         <div class="price-line">
-            <span class="price">{{ product.price }} VNĐ</span>
+            <span class="price">{{ product.price|format_vnd }}</span>
             {% if product.old_price %}
-            <span class="price-old">{{ product.old_price }} VNĐ</span>
+            <span class="price-old">{{ product.old_price|format_vnd }}</span>
             {% endif %}
         </div>
         <p>{{ product.description }}</p>

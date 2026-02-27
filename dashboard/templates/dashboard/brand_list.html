@@ -1,0 +1,72 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Quản lý danh mục | TechOne{% endblock %}
+{% block page_kicker %}Quản lý danh mục{% endblock %}
+{% block page_title %}Nhãn hàng theo hạng mục{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-card">
+        <span class="badge">Dashboard quản trị</span>
+        <h1>Quản lý danh mục (nhãn hàng)</h1>
+        <p>Mỗi nhãn hàng thuộc về một hạng mục. Ví dụ: Xiaomi thuộc Điện thoại.</p>
+        <div class="hero-actions">
+            <a class="btn-primary" href="{% url 'brand_create' %}">Thêm nhãn hàng</a>
+            <a class="btn-ghost" href="{% url 'dashboard_home' %}">Về Dashboard</a>
+        </div>
+        <div class="stats">
+            <div class="stat">
+                <strong>{{ brands|length }}</strong>
+                <span>Nhãn hàng đang có</span>
+            </div>
+            <div class="stat">
+                <strong>{{ categories|length }}</strong>
+                <span>Hạng mục</span>
+            </div>
+        </div>
+    </div>
+    <div class="hero-card">
+        <span class="badge">Gợi ý</span>
+        <h2>Liên kết rõ ràng</h2>
+        <p>Gắn nhãn hàng đúng hạng mục để bộ lọc sản phẩm hiển thị chuẩn.</p>
+        <div class="callout">
+            <strong>Ví dụ</strong>
+            <small>Điện thoại → Xiaomi, Samsung, Apple.</small>
+        </div>
+    </div>
+</section>
+
+<section class="grid">
+    <div class="card">
+        <h2>Danh sách nhãn hàng</h2>
+        {% if brands %}
+        <ul class="list">
+            {% for brand in brands %}
+            <li class="list-item">
+                <div class="list-meta">
+                    <strong>{{ brand.name }}</strong>
+                    <span>Hạng mục: {{ brand.category.name }}</span>
+                </div>
+                <div class="list-actions">
+                    <a class="btn-ghost btn-sm" href="{% url 'brand_delete' brand.id %}">Xóa</a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div class="empty-state">Chưa có nhãn hàng. Hãy thêm nhãn hàng đầu tiên.</div>
+        {% endif %}
+    </div>
+    <aside class="card tips">
+        <h3>Hạng mục hiện có</h3>
+        <p class="helper">Chọn hạng mục trước khi tạo nhãn hàng.</p>
+        <ul class="chips">
+            {% for category in categories %}
+            <li class="chip">{{ category.name }}</li>
+            {% empty %}
+            <li class="chip">Chưa có hạng mục</li>
+            {% endfor %}
+        </ul>
+    </aside>
+</section>
+{% endblock %}
