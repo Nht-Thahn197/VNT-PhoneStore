@@ -1,5 +1,5 @@
 {% extends 'core/base.html' %}
-{% load price_filters %}
+{% load static price_filters %}
 
 {% block title %}Thông tin | TechOne{% endblock %}
 
@@ -75,26 +75,14 @@
         <div class="form-grid">
             <div class="form-group">
                 <label for="city">Tỉnh / Thành phố</label>
-                <select id="city">
-                    <option>Hà Nội</option>
-                    <option>Hồ Chí Minh</option>
-                    <option>Đà Nẵng</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="district">Quận / Huyện</label>
-                <select id="district">
-                    <option>Quận Hà Đông</option>
-                    <option>Quận 1</option>
-                    <option>Quận Hải Châu</option>
+                <select id="city" class="js-custom-select">
+                    <option value="" selected>Đang tải danh sách...</option>
                 </select>
             </div>
             <div class="form-group">
                 <label for="ward">Phường / Xã</label>
-                <select id="ward">
-                    <option>Phường Yên Nghĩa</option>
-                    <option>Phường Bến Nghé</option>
-                    <option>Phường Hải Châu 1</option>
+                <select id="ward" class="js-custom-select" disabled>
+                    <option value="" selected>Chọn Tỉnh/Thành trước</option>
                 </select>
             </div>
             <div class="form-group">
@@ -105,7 +93,7 @@
 
         <div class="form-group">
             <label for="delivery-time">Thời gian giao hàng</label>
-            <select id="delivery-time">
+            <select id="delivery-time" class="js-custom-select">
                 <option>Giao siêu tốc: trước 14 giờ 30 phút ngày {{ today|date:"d/m/Y" }}</option>
                 <option>Giao trong ngày</option>
                 <option>Giao tiết kiệm (2-3 ngày)</option>
@@ -166,4 +154,8 @@
         </div>
     </aside>
 </section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'core/js/checkout-address.js' %}"></script>
 {% endblock %}
