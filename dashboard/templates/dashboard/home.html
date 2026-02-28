@@ -5,93 +5,56 @@
 {% block page_title %}Bảng điều khiển{% endblock %}
 
 {% block content %}
-<section class="hero">
-    <div class="hero-card">
-        <span class="badge">TechOne Dashboard</span>
+<section class="page-head">
+    <div>
         <h1>Xin chào, quản trị viên</h1>
-        <p>Quản lý danh mục, sản phẩm và chiến dịch ưu đãi theo phong cách TechOne gọn gàng, rõ ràng.</p>
-        <div class="hero-actions">
-            <a class="btn-primary" href="{% url 'category_list' %}">Quản lý hạng mục</a>
-            <a class="btn-ghost" href="{% url 'category_create' %}">Thêm hạng mục</a>
-        </div>
-        <div class="stats">
-            <div class="stat">
-                <strong>128</strong>
-                <span>Sản phẩm đang bán</span>
-            </div>
-            <div class="stat">
-                <strong>5</strong>
-                <span>Chiến dịch nổi bật</span>
-            </div>
-            <div class="stat">
-                <strong>1.2k</strong>
-                <span>Đơn hàng mới</span>
-            </div>
-        </div>
+        <p class="helper">Chọn nhanh khu vực cần quản lý.</p>
     </div>
-    <div class="hero-card">
-        <span class="badge">Trạng thái hôm nay</span>
-        <h2>Nhịp vận hành</h2>
-        <p>Đảm bảo danh mục nổi bật được cập nhật mỗi sáng để giữ tốc độ bán hàng.</p>
-        <div class="callout">
-            <strong>Checklist nhanh</strong>
-            <small>Kiểm tra danh mục hot, ưu đãi và banner nổi bật trước 9h.</small>
-        </div>
+    <div class="page-actions">
+        <a class="btn-primary" href="{% url 'category_list' %}">Quản lý hạng mục</a>
+        <a class="btn-ghost" href="{% url 'product_list' %}">Quản lý sản phẩm</a>
     </div>
 </section>
 
-<section class="grid">
-    <div class="card">
-        <h2>Việc cần làm</h2>
-        <ul class="list">
-            <li class="list-item">
-                <div class="list-meta">
-                    <strong>Cập nhật danh mục ưu tiên</strong>
-                    <span>Ưu tiên nhóm Điện thoại, Laptop và Phụ kiện</span>
-                </div>
-                <div class="list-actions">
-                    <a class="btn-ghost btn-sm" href="{% url 'category_list' %}">Xem</a>
-                </div>
-            </li>
-            <li class="list-item">
-                <div class="list-meta">
-                    <strong>Kiểm tra chương trình khuyến mãi</strong>
-                    <span>Đối chiếu giá niêm yết và thông điệp truyền thông</span>
-                </div>
-                <div class="list-actions">
-                    <a class="btn-ghost btn-sm" href="#">Mở</a>
-                </div>
-            </li>
-            <li class="list-item">
-                <div class="list-meta">
-                    <strong>Đồng bộ mô tả danh mục mới</strong>
-                    <span>Đảm bảo hiển thị nhất quán trên menu</span>
-                </div>
-                <div class="list-actions">
-                    <a class="btn-ghost btn-sm" href="{% url 'category_create' %}">Tạo</a>
-                </div>
-            </li>
-        </ul>
-    </div>
-    <aside class="card tips">
-        <h3>Nhắc quản trị</h3>
-        <p class="helper">Thông tin hữu ích để giữ trải nghiệm TechOne đồng nhất.</p>
-        <ul class="chips">
-            <li class="chip">Tối ưu tên danh mục</li>
-            <li class="chip">Giữ banner gọn</li>
-            <li class="chip">Đồng bộ ưu đãi</li>
-            <li class="chip">Theo dõi tồn kho</li>
-        </ul>
-        <div class="callout">
-            <strong>Đội vận hành</strong>
-            <small>Gửi báo cáo nhanh mỗi chiều để cập nhật chiến dịch.</small>
-        </div>
-    </aside>
-</section>
-
-<section class="policy">
-    <div class="policy-item"><span class="policy-dot"></span>Vận hành đồng nhất trên mọi điểm bán</div>
-    <div class="policy-item"><span class="policy-dot"></span>Giữ trải nghiệm mua sắm liền mạch</div>
-    <div class="policy-item"><span class="policy-dot"></span>Cập nhật giá và khuyến mãi theo thời gian thực</div>
+<section class="card">
+    <h2>Truy cập nhanh</h2>
+    <ul class="list">
+        <li class="list-item">
+            <div class="list-meta">
+                <strong>Hạng mục</strong>
+                <span>Thêm, sửa, xoá danh mục</span>
+            </div>
+            <div class="list-actions">
+                <a class="btn-ghost btn-sm" href="{% url 'category_list' %}">Mở</a>
+            </div>
+        </li>
+        <li class="list-item">
+            <div class="list-meta">
+                <strong>Nhãn hàng</strong>
+                <span>Quản lý nhãn hàng theo hạng mục</span>
+            </div>
+            <div class="list-actions">
+                <a class="btn-ghost btn-sm" href="{% url 'brand_list' %}">Mở</a>
+            </div>
+        </li>
+        <li class="list-item">
+            <div class="list-meta">
+                <strong>Sản phẩm</strong>
+                <span>Giá, tồn kho, trạng thái hiển thị</span>
+            </div>
+            <div class="list-actions">
+                <a class="btn-ghost btn-sm" href="{% url 'product_list' %}">Mở</a>
+            </div>
+        </li>
+        <li class="list-item">
+            <div class="list-meta">
+                <strong>Khách hàng</strong>
+                <span>Danh sách tài khoản đã đăng ký</span>
+            </div>
+            <div class="list-actions">
+                <a class="btn-ghost btn-sm" href="{% url 'customer_list' %}">Mở</a>
+            </div>
+        </li>
+    </ul>
 </section>
 {% endblock %}

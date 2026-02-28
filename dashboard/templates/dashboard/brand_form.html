@@ -1,65 +1,50 @@
 {% extends "dashboard/base.html" %}
 
-{% block title %}Thêm nhãn hàng | TechOne{% endblock %}
+{% block title %}{% if is_edit %}Sửa nhãn hàng{% else %}Thêm nhãn hàng{% endif %} | TechOne{% endblock %}
 {% block page_kicker %}Quản lý danh mục{% endblock %}
-{% block page_title %}Thêm nhãn hàng{% endblock %}
+{% block page_title %}{% if is_edit %}Sửa nhãn hàng{% else %}Thêm nhãn hàng{% endif %}{% endblock %}
 
 {% block content %}
-<section class="hero">
-    <div class="hero-card">
-        <span class="badge">Dashboard quản trị</span>
-        <h1>Thêm nhãn hàng</h1>
-        <p>Gắn nhãn hàng vào đúng hạng mục để dễ lọc sản phẩm.</p>
-        <div class="hero-actions">
-            <a class="btn-primary" href="{% url 'brand_list' %}">Xem danh sách nhãn hàng</a>
-            <a class="btn-ghost" href="{% url 'dashboard_home' %}">Về Dashboard</a>
-        </div>
+<section class="page-head">
+    <div>
+        <h1>{% if is_edit %}Sửa nhãn hàng{% else %}Thêm nhãn hàng{% endif %}</h1>
+        <p class="helper">Gắn nhãn hàng vào đúng hạng mục để dễ lọc sản phẩm.</p>
     </div>
-    <div class="hero-card">
-        <span class="badge">Lưu ý</span>
-        <h2>Chọn hạng mục trước</h2>
-        <p>Nhãn hàng cần thuộc một hạng mục cụ thể (ví dụ: Samsung → Điện thoại).</p>
-        <div class="callout">
-            <strong>Tip</strong>
-            <small>Đặt tên ngắn gọn, dễ nhận biết.</small>
-        </div>
+    <div class="page-actions">
+        <a class="btn-ghost" href="{% url 'brand_list' %}">Quay lại danh sách</a>
     </div>
 </section>
 
-<section class="grid">
-    <div class="card form-card">
-        <h2>Thông tin nhãn hàng</h2>
-        <form method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="brand-name">Tên nhãn hàng</label>
-                <input id="brand-name" type="text" name="name" placeholder="Ví dụ: Xiaomi" required>
-            </div>
-            <div class="form-group">
-                <label for="brand-category">Hạng mục</label>
-                <select id="brand-category" name="category_id" required>
-                    <option value="">Chọn hạng mục</option>
-                    {% for category in categories %}
-                    <option value="{{ category.id }}">{{ category.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="form-actions">
-                <button class="btn-primary" type="submit">Lưu nhãn hàng</button>
-                <a class="btn-ghost" href="{% url 'brand_list' %}">Hủy</a>
-            </div>
-        </form>
-    </div>
-    <aside class="card tips">
-        <h3>Gợi ý nhanh</h3>
-        <p class="helper">Một số nhãn hàng phổ biến.</p>
-        <ul class="chips">
-            <li class="chip">Apple</li>
-            <li class="chip">Samsung</li>
-            <li class="chip">Xiaomi</li>
-            <li class="chip">OPPO</li>
-            <li class="chip">Sony</li>
-        </ul>
-    </aside>
+<section class="card form-card">
+    <h2>Thông tin nhãn hàng</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="brand-name">Tên nhãn hàng</label>
+            <input
+                id="brand-name"
+                type="text"
+                name="name"
+                placeholder="Ví dụ: Xiaomi"
+                value="{{ brand.name|default:'' }}"
+                required
+            >
+        </div>
+        <div class="form-group">
+            <label for="brand-category">Hạng mục</label>
+            <select id="brand-category" name="category_id" class="js-custom-select" required>
+                <option value="">Chọn hạng mục</option>
+                {% for category in categories %}
+                <option value="{{ category.id }}" {% if brand and brand.category_id == category.id %}selected{% endif %}>
+                    {{ category.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-actions">
+            <button class="btn-primary" type="submit">{% if is_edit %}Cập nhật{% else %}Lưu nhãn hàng{% endif %}</button>
+            <a class="btn-ghost" href="{% url 'brand_list' %}">Hủy</a>
+        </div>
+    </form>
 </section>
 {% endblock %}

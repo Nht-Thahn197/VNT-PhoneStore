@@ -1,0 +1,77 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Chi tiết khách hàng | TechOne{% endblock %}
+{% block page_kicker %}Quản lý khách hàng{% endblock %}
+{% block page_title %}Chi tiết khách hàng{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <h1>Chi tiết khách hàng</h1>
+        <p class="helper">Xem thông tin tài khoản khách hàng.</p>
+    </div>
+    <div class="page-actions">
+        <a class="btn-ghost" href="{% url 'customer_list' %}">Quay lại danh sách</a>
+    </div>
+</section>
+
+<section class="card form-card">
+    <h2>Thông tin tài khoản</h2>
+    <form>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Tên đăng nhập</label>
+                <input type="text" value="{{ customer.username }}" disabled>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" value="{{ customer.email|default:'' }}" disabled>
+            </div>
+            <div class="form-group">
+                <label>Số điện thoại</label>
+                <input type="text" value="{{ customer.phone|default:'' }}" disabled>
+            </div>
+            <div class="form-group">
+                <label>Vai trò</label>
+                <input type="text" value="{{ customer.get_role_display|default:'Customer' }}" disabled>
+            </div>
+        </div>
+    </form>
+</section>
+
+<section class="card form-card">
+    <h2>Thông tin cá nhân</h2>
+    <form>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Họ</label>
+                <input type="text" value="{{ customer.last_name|default:'' }}" disabled>
+            </div>
+            <div class="form-group">
+                <label>Tên</label>
+                <input type="text" value="{{ customer.first_name|default:'' }}" disabled>
+            </div>
+            <div class="form-group">
+                <label>Ngày sinh</label>
+                <input type="date" value="{{ customer.birth_date|date:'Y-m-d' }}" disabled>
+            </div>
+        </div>
+    </form>
+</section>
+
+<section class="card form-card">
+    <h2>Trạng thái</h2>
+    <form>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Ngày tạo</label>
+                <input type="text" value="{{ customer.date_joined|date:'d/m/Y H:i' }}" disabled>
+            </div>
+            <div class="form-group">
+                <label>Đăng nhập gần nhất</label>
+                <input type="text" value="{{ customer.last_login|date:'d/m/Y H:i' }}" disabled>
+            </div>
+        </div>
+    </form>
+</section>
+{% endblock %}

@@ -6,45 +6,21 @@
 {% block page_title %}Danh sách sản phẩm{% endblock %}
 
 {% block content %}
-<section class="hero">
-    <div class="hero-card">
-        <span class="badge">Dashboard quản trị</span>
-        <h1>Quản lý sản phẩm</h1>
-        <p>Cập nhật thông tin, tồn kho và trạng thái hiển thị.</p>
-        <div class="hero-actions">
-            <a class="btn-primary" href="{% url 'product_create' %}">Thêm sản phẩm</a>
-            <a class="btn-ghost" href="{% url 'dashboard_home' %}">Về Dashboard</a>
-        </div>
-        <div class="stats">
-            <div class="stat">
-                <strong>{{ products|length }}</strong>
-                <span>Sản phẩm</span>
-            </div>
-            <div class="stat">
-                <strong>{{ categories|length }}</strong>
-                <span>Hạng mục</span>
-            </div>
-            <div class="stat">
-                <strong>{{ brands|length }}</strong>
-                <span>Nhãn hàng</span>
-            </div>
-        </div>
+<section class="page-head">
+    <div>
+        <h1>Danh sách sản phẩm</h1>
+        <p class="helper">Quản lý thông tin, tồn kho và trạng thái hiển thị.</p>
     </div>
-    <div class="hero-card">
-        <span class="badge">Checklist</span>
-        <h2>Nhịp cập nhật</h2>
-        <p>Kiểm tra ảnh, giá và trạng thái hiển thị trước 9h sáng.</p>
-        <div class="callout">
-            <strong>Ưu tiên</strong>
-            <small>Ghim sản phẩm mới và cập nhật tồn kho.</small>
-        </div>
+    <div class="page-actions">
+        <a class="btn-primary" href="{% url 'product_create' %}">Thêm sản phẩm</a>
+        <a class="btn-ghost" href="{% url 'dashboard_home' %}">Về Dashboard</a>
     </div>
 </section>
 
 <section class="card">
     <div class="section-head">
         <h2>Danh sách sản phẩm</h2>
-        <p class="helper">Nhấp “Thêm sản phẩm” để tạo mới.</p>
+        <p class="helper">Tổng: {{ products|length }}</p>
     </div>
     {% if products %}
     <ul class="list">
@@ -56,6 +32,7 @@
             </div>
             <div class="list-actions">
                 <span class="helper">Kho: {{ product.stock }}</span>
+                <a class="btn-ghost btn-sm" href="{% url 'product_edit' product.id %}">Sửa</a>
                 <a class="btn-ghost btn-sm" href="{% url 'product_delete' product.id %}">Xóa</a>
             </div>
         </li>

@@ -29,19 +29,15 @@
                 <a class="is-placeholder" href="#">Xuất hàng</a>
                 <a class="is-placeholder" href="#">Kiểm kho</a>
             </nav>
-            <div class="sidebar-panel">
-                <h4>Trực ca hôm nay</h4>
-                <p>08:00 - 17:00 · Ưu tiên cập nhật danh mục nổi bật.</p>
-            </div>
             <div class="sidebar-footer">
                 {% if user.is_authenticated %}
                 <div class="sidebar-user">
                     <strong>{{ user.first_name|default:user.username }}</strong>
                     <span>Nhân viên vận hành</span>
                 </div>
-                <a class="sidebar-logout" href="{% url 'logout' %}">Đăng xuất</a>
+                <a class="sidebar-logout" href="{% url 'admin_logout' %}">Đăng xuất</a>
                 {% else %}
-                <a class="sidebar-logout" href="{% url 'login' %}">Đăng nhập</a>
+                <a class="sidebar-logout" href="{% url 'admin_login' %}">Đăng nhập</a>
                 {% endif %}
             </div>
         </aside>
@@ -52,14 +48,9 @@
                     <span>{% block page_kicker %}TechOne Admin{% endblock %}</span>
                     <h1>{% block page_title %}Bảng điều khiển{% endblock %}</h1>
                 </div>
-                <div class="topbar-actions">
-                    <form class="topbar-search" action="#" method="get">
-                        <input type="text" placeholder="Tìm nhanh danh mục, sản phẩm...">
-                    </form>
-                    <div class="topbar-meta">
-                        <span>Hôm nay</span>
-                        <strong>{% now "d/m/Y" %}</strong>
-                    </div>
+                <div class="topbar-meta">
+                    <span>Hôm nay</span>
+                    <strong>{% now "d/m/Y" %}</strong>
                 </div>
             </header>
 
@@ -72,5 +63,6 @@
             </footer>
         </div>
     </div>
+    <script src="{% static 'dashboard/js/custom-select.js' %}"></script>
 </body>
 </html>
