@@ -135,6 +135,13 @@ LOGIN_URL = '/account/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
+# VietQR settings for bank transfer QR (leave empty to use static my-qr.jpg)
+VIETQR_BANK_ID = "MB"
+VIETQR_ACCOUNT_NO = "8410113801888"
+VIETQR_ACCOUNT_NAME = "Cong ty TNHH TechOne"
+VIETQR_ADD_INFO = "Thanh toan don hang TechOne"
+VIETQR_TEMPLATE = "compact2"
+
 # Separate session cookie for dashboard/admin area.
 ADMIN_SESSION_COOKIE_NAME = 'admin_sessionid'
 

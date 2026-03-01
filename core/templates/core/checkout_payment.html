@@ -1,5 +1,5 @@
 {% extends 'core/base.html' %}
-{% load price_filters %}
+{% load static price_filters %}
 
 {% block title %}Thanh toán | TechOne{% endblock %}
 
@@ -81,6 +81,11 @@
                 </div>
             </label>
         </div>
+        <div id="bank-qr" class="bank-qr{% if payment_method == 'bank' %} is-active{% endif %}" data-qr-url="{{ bank_qr_url }}" data-fallback-url="{% static 'my-qr.jpg' %}">
+            <div class="bank-qr__media">
+                <img src="{% if bank_qr_url %}{{ bank_qr_url }}{% else %}{% static 'my-qr.jpg' %}{% endif %}" alt="QR chuyển khoản">
+            </div>
+        </div>
         {% if errors.payment_method %}<div class="form-error">{{ errors.payment_method }}</div>{% endif %}
         {% if errors.stock %}<div class="form-error">{{ errors.stock }}</div>{% endif %}
 
@@ -131,4 +136,8 @@
         <a class="btn-ghost btn-full" href="{% url 'cart' %}">Kiểm tra danh sách sản phẩm ({{ cart.get_total_quantity }})</a>
     </aside>
 </section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'core/js/checkout-payment.js' %}"></script>
 {% endblock %}

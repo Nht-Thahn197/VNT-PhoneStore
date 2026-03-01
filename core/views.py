@@ -1,5 +1,7 @@
 from decimal import Decimal
+from urllib.parse import urlencode, quote
 
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.db.models import Q
@@ -58,6 +60,23 @@ def _get_cart_totals(cart):
 def _build_address_display(data):
     parts = [data.get("address"), data.get("ward_name") or data.get("ward"), data.get("city_name") or data.get("city")]
     return ", ".join([part for part in parts if part])
+
+
+def _build_vietqr_url(total):
+    bank_id = getattr(settings, "VIETQR_BANK_ID", "")
+    account_no = getattr(settings, "VIETQR_ACCOUNT_NO", "")
+    account_name = getattr(settings, "VIETQR_ACCOUNT_NAME", "")
+    template = getattr(settings, "VIETQR_TEMPLATE", "compact2") or "compact2"
+    if not (bank_id and account_no and account_name):
+        return ""
+
+    amount = int(total or 0)
+    params = {"amount": amount, "accountName": account_name}
+    add_info = getattr(settings, "VIETQR_ADD_INFO", "")
+    if add_info:
+        params["addInfo"] = add_info
+    query = urlencode(params, quote_via=quote)
+    return f"https://img.vietqr.io/image/{bank_id}-{account_no}-{template}.png?{query}"
 
 
 @login_required
@@ -157,6 +176,7 @@ def checkout_info(request):
             return redirect("checkout_payment")
 
     subtotal, discount, shipping, total = _get_cart_totals(cart)
+
     context = {
         "cart": cart,
         "subtotal": subtotal,
@@ -183,6 +203,7 @@ def checkout_payment(request):
         return redirect("checkout_info")
 
     subtotal, discount, shipping, total = _get_cart_totals(cart)
+    bank_qr_url = _build_vietqr_url(total)
     errors = {}
     payment_method = "cod"
     coupon_code = ""
@@ -254,6 +275,7 @@ def checkout_payment(request):
         "errors": errors,
         "payment_method": payment_method,
         "coupon_code": coupon_code,
+        "bank_qr_url": bank_qr_url,
     }
     return render(request, "core/checkout_payment.html", context)
 
