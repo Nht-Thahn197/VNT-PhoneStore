@@ -1,11 +1,15 @@
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import user_passes_test
+from django.db.models import Count
+from django.http import JsonResponse
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.text import slugify
+from django.utils import timezone
 
 from accounts.models import User
 from products.models import Category, Brand, Product
+from orders.models import Order
 
 def admin_login(request):
     if request.user.is_authenticated and request.user.is_staff:
@@ -274,3 +278,90 @@ def customer_list(request):
 def customer_detail(request, id):
     customer = get_object_or_404(User, id=id, role="customer")
     return render(request, "dashboard/customer_detail.html", {"customer": customer})
+
+
+@staff_required
+def order_list(request):
+    status_filter = request.GET.get("status", "").strip()
+    orders = Order.objects.select_related("user").order_by("-created_at")
+    if status_filter:
+        orders = orders.filter(status=status_filter)
+
+    status_counts = {key: 0 for key, _ in Order.STATUS_CHOICES}
+    for entry in Order.objects.values("status").annotate(total=Count("id")):
+        status_counts[entry["status"]] = entry["total"]
+
+    status_summary = [
+        {"key": key, "label": label, "count": status_counts.get(key, 0)}
+        for key, label in Order.STATUS_CHOICES
+    ]
+
+    context = {
+        "orders": orders,
+        "status_filter": status_filter,
+        "status_summary": status_summary,
+    }
+    return render(request, "dashboard/order_list.html", context)
+
+
+@staff_required
+def order_detail(request, id):
+    order = get_object_or_404(Order, id=id)
+    status_flow = {
+        "pending": ("confirmed", "Xác nhận"),
+        "confirmed": ("shipping", "Đang giao hàng"),
+        "shipping": ("completed", "Hoàn thành"),
+    }
+    next_status, next_label = status_flow.get(order.status, (None, None))
+
+    if request.method == "POST":
+        new_status = request.POST.get("status", "").strip()
+        if next_status and new_status == next_status:
+            order.status = new_status
+            order.save(update_fields=["status", "updated_at"])
+        return redirect("order_detail", id=order.id)
+
+    return render(
+        request,
+        "dashboard/order_detail.html",
+        {
+            "order": order,
+            "items": order.items.select_related("product").all(),
+            "next_status": next_status,
+            "next_label": next_label,
+        },
+    )
+
+
+@staff_required
+def order_notifications(request):
+    latest_order = Order.objects.order_by("-id").first()
+    last_seen_id = request.session.get("orders_last_seen_id")
+
+    if last_seen_id is None:
+        request.session["orders_last_seen_id"] = latest_order.id if latest_order else 0
+        last_seen_id = request.session["orders_last_seen_id"]
+
+    new_orders = Order.objects.filter(id__gt=last_seen_id).order_by("-id")
+    new_count = new_orders.count()
+
+    if new_count:
+        request.session["orders_last_seen_id"] = new_orders.first().id
+
+    recent_orders = Order.objects.order_by("-id")[:5]
+
+    payload = {
+        "new_count": new_count,
+        "server_time": timezone.now().isoformat(),
+        "orders": [
+            {
+                "id": order.id,
+                "full_name": order.full_name,
+                "total": float(order.total),
+                "created_at": order.created_at.isoformat(),
+                "status": order.get_status_display(),
+            }
+            for order in recent_orders
+        ],
+    }
+    return JsonResponse(payload)

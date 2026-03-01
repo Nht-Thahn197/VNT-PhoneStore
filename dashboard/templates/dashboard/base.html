@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Dashboard | TechOne{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'core/css/techone.css' %}">
-    <link rel="stylesheet" href="{% static 'dashboard/css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'dashboard/css/dashboard.css' %}?v=2">
 </head>
 <body class="dashboard-body">
     <div class="dashboard-shell">
@@ -23,7 +23,7 @@
                 <a class="{% if request.resolver_match.url_name == 'brand_list' %}active{% endif %}" href="{% url 'brand_list' %}">Quản lý danh mục</a>
                 <a class="{% if request.resolver_match.url_name == 'category_list' %}active{% endif %}" href="{% url 'category_list' %}">Quản lý hạng mục</a>
                 <a class="{% if request.resolver_match.url_name == 'product_list' %}active{% endif %}" href="{% url 'product_list' %}">Quản lý sản phẩm</a>
-                <a class="is-placeholder" href="#">Quản lý đơn hàng</a>
+                <a class="{% if request.resolver_match.url_name == 'order_list' or request.resolver_match.url_name == 'order_detail' %}active{% endif %}" href="{% url 'order_list' %}">Quản lý đơn hàng</a>
                 <a class="{% if request.resolver_match.url_name == 'customer_list' %}active{% endif %}" href="{% url 'customer_list' %}">Quản lý khách hàng</a>
                 <a class="is-placeholder" href="#">Nhập hàng</a>
                 <a class="is-placeholder" href="#">Xuất hàng</a>
@@ -48,9 +48,29 @@
                     <span>{% block page_kicker %}TechOne Admin{% endblock %}</span>
                     <h1>{% block page_title %}Bảng điều khiển{% endblock %}</h1>
                 </div>
-                <div class="topbar-meta">
-                    <span>Hôm nay</span>
-                    <strong>{% now "d/m/Y" %}</strong>
+                <div class="topbar-actions">
+                    {% if user.is_authenticated and user.is_staff %}
+                    <div class="notify" data-notify>
+                        <button class="notify-btn" type="button" aria-label="Thông báo đơn hàng" data-notify-button>
+                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z" />
+                                <path d="M10 20a2 2 0 0 0 4 0" />
+                            </svg>
+                            <span class="notify-badge" data-notify-badge hidden>0</span>
+                        </button>
+                        <div class="notify-panel" data-notify-panel hidden>
+                            <div class="notify-head">Đơn hàng mới</div>
+                            <div class="notify-list" data-notify-list>
+                                <div class="empty-state">Chưa có đơn hàng mới.</div>
+                            </div>
+                            <a class="notify-foot" href="{% url 'order_list' %}">Xem tất cả đơn hàng</a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="topbar-meta">
+                        <span>Hôm nay</span>
+                        <strong>{% now "d/m/Y" %}</strong>
+                    </div>
                 </div>
             </header>
 
@@ -64,5 +84,6 @@
         </div>
     </div>
     <script src="{% static 'dashboard/js/custom-select.js' %}"></script>
+    <script src="{% static 'dashboard/js/order-notifications.js' %}?v=2"></script>
 </body>
 </html>

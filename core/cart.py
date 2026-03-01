@@ -69,6 +69,16 @@ class Cart:
 
         self.save()
 
+    def clear(self):
+        if self.use_db:
+            CartItem.objects.filter(user=self.user).delete()
+            self._items_cache = None
+            return
+
+        self.session.pop("cart", None)
+        self.cart = {}
+        self.save()
+
     def save(self):
         if not self.use_db:
             self.session.modified = True

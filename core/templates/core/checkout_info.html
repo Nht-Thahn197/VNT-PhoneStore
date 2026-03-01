@@ -16,11 +16,16 @@
 </section>
 
 <section class="grid checkout-grid">
-    <div class="card">
+    <form class="card" method="post">
+        {% csrf_token %}
         <div class="section-head">
             <h2>Thông tin đơn hàng</h2>
             <p class="helper">Kiểm tra sản phẩm và điền thông tin nhận hàng.</p>
         </div>
+
+        {% if errors %}
+        <div class="alert alert-danger">Vui lòng kiểm tra lại các thông tin bắt buộc.</div>
+        {% endif %}
 
         {% if cart.get_total_quantity %}
         <ul class="list">
@@ -45,15 +50,17 @@
         <div class="form-grid">
             <div class="form-group">
                 <label for="customer-name">Họ và tên</label>
-                <input id="customer-name" type="text" value="{{ user.get_full_name|default:user.username }}" placeholder="Nguyễn Văn A">
+                <input id="customer-name" name="full_name" type="text" value="{{ form.full_name|default_if_none:'' }}" placeholder="Nguyễn Văn A">
+                {% if errors.full_name %}<div class="form-error">{{ errors.full_name }}</div>{% endif %}
             </div>
             <div class="form-group">
                 <label for="customer-phone">Số điện thoại</label>
-                <input id="customer-phone" type="tel" placeholder="0123 456 789">
+                <input id="customer-phone" name="phone" type="tel" value="{{ form.phone|default_if_none:'' }}" placeholder="0123 456 789">
+                {% if errors.phone %}<div class="form-error">{{ errors.phone }}</div>{% endif %}
             </div>
             <div class="form-group">
                 <label for="customer-email">Email</label>
-                <input id="customer-email" type="email" value="{{ user.email|default:'' }}" placeholder="email@example.com">
+                <input id="customer-email" name="email" type="email" value="{{ form.email|default_if_none:'' }}" placeholder="email@example.com">
             </div>
         </div>
 
@@ -63,57 +70,66 @@
         </div>
         <div class="radio-group">
             <label class="radio-card">
-                <input type="radio" name="delivery" checked>
+                <input type="radio" name="delivery" value="delivery" {% if form.delivery_method != 'pickup' %}checked{% endif %}>
                 <span>Giao hàng tận nơi</span>
             </label>
             <label class="radio-card">
-                <input type="radio" name="delivery">
+                <input type="radio" name="delivery" value="pickup" {% if form.delivery_method == 'pickup' %}checked{% endif %}>
                 <span>Nhận tại cửa hàng</span>
             </label>
         </div>
 
+        <input id="city_name" type="hidden" name="city_name" value="{{ form.city_name|default:'' }}">
+        <input id="ward_name" type="hidden" name="ward_name" value="{{ form.ward_name|default:'' }}">
         <div class="form-grid">
             <div class="form-group">
                 <label for="city">Tỉnh / Thành phố</label>
-                <select id="city" class="js-custom-select">
+                <select id="city" name="city" class="js-custom-select" data-selected="{{ form.city|default:'' }}">
                     <option value="" selected>Đang tải danh sách...</option>
                 </select>
+                {% if errors.city %}<div class="form-error">{{ errors.city }}</div>{% endif %}
             </div>
             <div class="form-group">
                 <label for="ward">Phường / Xã</label>
-                <select id="ward" class="js-custom-select" disabled>
+                <select id="ward" name="ward" class="js-custom-select" data-selected="{{ form.ward|default:'' }}" disabled>
                     <option value="" selected>Chọn Tỉnh/Thành trước</option>
                 </select>
+                {% if errors.ward %}<div class="form-error">{{ errors.ward }}</div>{% endif %}
             </div>
             <div class="form-group">
                 <label for="address">Địa chỉ nhận hàng</label>
-                <input id="address" type="text" placeholder="Số nhà, tên đường, tòa nhà...">
+                <input id="address" name="address" type="text" value="{{ form.address|default:'' }}" placeholder="Số nhà, tên đường, tòa nhà...">
+                {% if errors.address %}<div class="form-error">{{ errors.address }}</div>{% endif %}
             </div>
         </div>
 
         <div class="form-group">
             <label for="delivery-time">Thời gian giao hàng</label>
-            <select id="delivery-time" class="js-custom-select">
-                <option>Giao siêu tốc: trước 14 giờ 30 phút ngày {{ today|date:"d/m/Y" }}</option>
-                <option>Giao trong ngày</option>
-                <option>Giao tiết kiệm (2-3 ngày)</option>
+            <select id="delivery-time" name="delivery_time" class="js-custom-select">
+                {% with fast_date=today|date:"d/m/Y" %}
+                {% with fast_label="Giao siêu tốc: trước 14 giờ 30 phút ngày "|add:fast_date %}
+                <option value="{{ fast_label }}" {% if form.delivery_time == fast_label %}selected{% endif %}>{{ fast_label }}</option>
+                {% endwith %}
+                {% endwith %}
+                <option value="Giao trong ngày" {% if form.delivery_time == "Giao trong ngày" %}selected{% endif %}>Giao trong ngày</option>
+                <option value="Giao tiết kiệm (2-3 ngày)" {% if form.delivery_time == "Giao tiết kiệm (2-3 ngày)" %}selected{% endif %}>Giao tiết kiệm (2-3 ngày)</option>
             </select>
         </div>
 
         <div class="form-group">
             <label for="note">Ghi chú khác (nếu có)</label>
-            <textarea id="note" placeholder="Ví dụ: giao giờ hành chính"></textarea>
+            <textarea id="note" name="note" placeholder="Ví dụ: giao giờ hành chính">{{ form.note|default:'' }}</textarea>
         </div>
 
         <div class="form-group">
             <label>Quý khách có muốn xuất hoá đơn công ty không?</label>
             <div class="radio-group">
                 <label class="radio-card">
-                    <input type="radio" name="invoice">
+                    <input type="radio" name="invoice" value="yes" {% if form.invoice_required %}checked{% endif %}>
                     <span>Có</span>
                 </label>
                 <label class="radio-card">
-                    <input type="radio" name="invoice" checked>
+                    <input type="radio" name="invoice" value="no" {% if not form.invoice_required %}checked{% endif %}>
                     <span>Không</span>
                 </label>
             </div>
@@ -124,10 +140,10 @@
                 <span>Tổng tiền tạm tính</span>
                 <strong>{{ total|format_vnd }}</strong>
             </div>
-            <a class="btn-primary" href="{% url 'checkout_payment' %}">Tiếp tục</a>
+            <button class="btn-primary" type="submit">Tiếp tục</button>
             <a class="btn-ghost" href="{% url 'cart' %}">Quay lại giỏ hàng</a>
         </div>
-    </div>
+    </form>
 
     <aside class="card">
         <div class="section-head">

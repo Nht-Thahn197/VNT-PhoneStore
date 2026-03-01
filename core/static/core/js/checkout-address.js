@@ -1,6 +1,8 @@
 (() => {
     const citySelect = document.getElementById("city");
     const wardSelect = document.getElementById("ward");
+    const cityNameInput = document.getElementById("city_name");
+    const wardNameInput = document.getElementById("ward_name");
 
     if (!citySelect || !wardSelect) {
         return;
@@ -104,13 +106,53 @@
     };
 
     const hydrate = ({ provinces, wardMap }) => {
+        const selectedCity = citySelect.dataset.selected || "";
+        const selectedWard = wardSelect.dataset.selected || "";
+
         setOptions(citySelect, provinces, "Chọn Tỉnh / Thành phố", false);
         setOptions(wardSelect, [], "Chọn Phường / Xã", true);
 
-        citySelect.addEventListener("change", () => {
-            const wards = wardMap.get(citySelect.value) || [];
+        const updateHiddenNames = () => {
+            if (cityNameInput) {
+                const selectedOption = citySelect.options[citySelect.selectedIndex];
+                cityNameInput.value = selectedOption && citySelect.value ? selectedOption.textContent : "";
+            }
+            if (wardNameInput) {
+                const selectedOption = wardSelect.options[wardSelect.selectedIndex];
+                wardNameInput.value = selectedOption && wardSelect.value ? selectedOption.textContent : "";
+            }
+        };
+
+        const syncWards = (cityCode, keepSelection = false) => {
+            const wards = wardMap.get(cityCode) || [];
             setOptions(wardSelect, wards, "Chọn Phường / Xã", wards.length === 0);
+            if (keepSelection && selectedWard) {
+                wardSelect.value = selectedWard;
+                if (window.CustomSelect?.refresh) {
+                    window.CustomSelect.refresh(wardSelect);
+                }
+            }
+            updateHiddenNames();
+        };
+
+        citySelect.addEventListener("change", () => {
+            syncWards(citySelect.value);
+            updateHiddenNames();
         });
+
+        wardSelect.addEventListener("change", () => {
+            updateHiddenNames();
+        });
+
+        if (selectedCity) {
+            citySelect.value = selectedCity;
+            if (window.CustomSelect?.refresh) {
+                window.CustomSelect.refresh(citySelect);
+            }
+            syncWards(selectedCity, true);
+        } else {
+            updateHiddenNames();
+        }
     };
 
     const init = async () => {

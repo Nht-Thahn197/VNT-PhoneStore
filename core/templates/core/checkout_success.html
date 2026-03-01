@@ -1,0 +1,63 @@
+{% extends 'core/base.html' %}
+{% load price_filters %}
+
+{% block title %}Đặt hàng thành công | TechOne{% endblock %}
+
+{% block content %}
+<section class="card">
+    <div class="section-head">
+        <h2>Đặt hàng thành công</h2>
+        <p class="helper">Cảm ơn bạn đã mua sắm tại TechOne. Đơn hàng của bạn đang được xử lý.</p>
+    </div>
+    <div class="summary-card">
+        <div class="summary-line">
+            <span>Mã đơn hàng</span>
+            <strong>#{{ order.id }}</strong>
+        </div>
+        <div class="summary-line">
+            <span>Trạng thái</span>
+            <strong>{{ order.get_status_display }}</strong>
+        </div>
+        <div class="summary-line">
+            <span>Phương thức thanh toán</span>
+            <strong>{{ order.get_payment_method_display }}</strong>
+        </div>
+        <div class="summary-line">
+            <span>Giao hàng</span>
+            <strong>{% if order.address_display %}{{ order.address_display }}{% else %}Nhận tại cửa hàng{% endif %}</strong>
+        </div>
+        {% if order.delivery_time %}
+        <div class="summary-line">
+            <span>Thời gian giao</span>
+            <strong>{{ order.delivery_time }}</strong>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<section class="card">
+    <div class="section-head">
+        <h3>Sản phẩm trong đơn</h3>
+        <p class="helper">Bạn có thể liên hệ tổng đài nếu cần hỗ trợ thêm.</p>
+    </div>
+    <ul class="list">
+        {% for item in items %}
+        <li class="list-item">
+            <div class="list-meta">
+                <strong>{{ item.product_name }}</strong>
+                <span>{{ item.quantity }} x {{ item.price|format_vnd }}</span>
+            </div>
+            <div class="price">{{ item.total|format_vnd }}</div>
+        </li>
+        {% endfor %}
+    </ul>
+    <div class="summary-total">
+        <span>Tổng cộng</span>
+        <strong>{{ order.total|format_vnd }}</strong>
+    </div>
+    <div class="checkout-actions">
+        <a class="btn-primary" href="{% url 'home' %}">Tiếp tục mua sắm</a>
+        <a class="btn-ghost" href="{% url 'cart' %}">Xem lại giỏ hàng</a>
+    </div>
+</section>
+{% endblock %}

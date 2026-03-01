@@ -1,0 +1,131 @@
+{% extends "dashboard/base.html" %}
+{% load price_filters %}
+
+{% block title %}Chi tiết đơn hàng | TechOne{% endblock %}
+{% block page_kicker %}Quản lý đơn hàng{% endblock %}
+{% block page_title %}Đơn hàng #{{ order.id }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <h1>Đơn hàng #{{ order.id }}</h1>
+        <p class="helper">Theo dõi và cập nhật trạng thái đơn.</p>
+    </div>
+    <div class="page-actions">
+        <a class="btn-ghost" href="{% url 'order_list' %}">Quay lại danh sách</a>
+    </div>
+</section>
+
+<section class="card">
+    <div class="section-head">
+        <h2>Thông tin đơn hàng</h2>
+        <p class="helper">Tạo lúc {{ order.created_at|date:"d/m/Y H:i" }}</p>
+    </div>
+    <div class="summary-card">
+        <div class="summary-line">
+            <span>Khách hàng</span>
+            <strong>{{ order.full_name }}</strong>
+        </div>
+        <div class="summary-line">
+            <span>Số điện thoại</span>
+            <strong>{{ order.phone }}</strong>
+        </div>
+        <div class="summary-line">
+            <span>Email</span>
+            <strong>{{ order.email|default:"--" }}</strong>
+        </div>
+        <div class="summary-line">
+            <span>Địa chỉ</span>
+            <strong>{% if order.address_display %}{{ order.address_display }}{% else %}Nhận tại cửa hàng{% endif %}</strong>
+        </div>
+        <div class="summary-line">
+            <span>Hình thức nhận hàng</span>
+            <strong>{{ order.get_delivery_method_display }}</strong>
+        </div>
+        {% if order.delivery_time %}
+        <div class="summary-line">
+            <span>Thời gian giao</span>
+            <strong>{{ order.delivery_time }}</strong>
+        </div>
+        {% endif %}
+        <div class="summary-line">
+            <span>Phương thức thanh toán</span>
+            <strong>{{ order.get_payment_method_display }}</strong>
+        </div>
+        <div class="summary-line">
+            <span>Xuất hóa đơn</span>
+            <strong>{% if order.invoice_required %}Có{% else %}Không{% endif %}</strong>
+        </div>
+        <div class="summary-line">
+            <span>Trạng thái</span>
+            <strong class="status-chip is-{{ order.status }}">{{ order.get_status_display }}</strong>
+        </div>
+    </div>
+
+    <form class="form-grid" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Cập nhật trạng thái</label>
+            <div class="helper">
+                {% if next_label %}
+                    Nhấn để chuyển sang trạng thái tiếp theo.
+                {% else %}
+                    Đơn hàng đã ở trạng thái cuối hoặc đã hủy.
+                {% endif %}
+            </div>
+        </div>
+        <div class="form-group">
+            <label>&nbsp;</label>
+            {% if next_status %}
+            <input type="hidden" name="status" value="{{ next_status }}">
+            <button class="btn-primary" type="submit">{{ next_label }}</button>
+            {% else %}
+            <button class="btn-ghost" type="button" disabled>Không thể cập nhật</button>
+            {% endif %}
+        </div>
+    </form>
+
+    {% if order.note %}
+    <div class="callout">
+        <strong>Ghi chú</strong>
+        <small>{{ order.note }}</small>
+    </div>
+    {% endif %}
+</section>
+
+<section class="card">
+    <div class="section-head">
+        <h2>Sản phẩm trong đơn</h2>
+        <p class="helper">Tổng cộng: {{ order.total|format_vnd }}</p>
+    </div>
+    <ul class="list">
+        {% for item in items %}
+        <li class="list-item">
+            <div class="list-meta">
+                <strong>{{ item.product_name }}</strong>
+                <span>{{ item.quantity }} x {{ item.price|format_vnd }}</span>
+            </div>
+            <div class="price">{{ item.total|format_vnd }}</div>
+        </li>
+        {% endfor %}
+    </ul>
+    <div class="summary-card">
+        <div class="summary-line">
+            <span>Tạm tính</span>
+            <strong>{{ order.subtotal|format_vnd }}</strong>
+        </div>
+        <div class="summary-line">
+            <span>Phí vận chuyển</span>
+            <strong>{{ order.shipping|format_vnd }}</strong>
+        </div>
+        <div class="summary-line">
+            <span>Giảm giá</span>
+            <strong>-{{ order.discount|format_vnd }}</strong>
+        </div>
+        <div class="summary-line">
+            <span>Tổng thanh toán</span>
+            <strong>{{ order.total|format_vnd }}</strong>
+        </div>
+    </div>
+</section>
+{% endblock %}

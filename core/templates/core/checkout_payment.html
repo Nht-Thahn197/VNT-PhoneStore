@@ -16,16 +16,21 @@
 </section>
 
 <section class="grid checkout-grid">
-    <div class="card">
+    <form id="checkout-form" class="card" method="post">
+        {% csrf_token %}
         <div class="section-head">
             <h2>Thanh toán</h2>
             <p class="helper">Chọn phương thức thanh toán và xác nhận đơn hàng.</p>
         </div>
 
+        {% if errors %}
+        <div class="alert alert-danger">Không thể tạo đơn hàng. Vui lòng kiểm tra lại thông tin.</div>
+        {% endif %}
+
         <div class="form-group">
             <label for="coupon">Nhập mã giảm giá (chỉ áp dụng 1 lần)</label>
             <div class="form-row">
-                <input id="coupon" type="text" placeholder="TECHONE2026">
+                <input id="coupon" name="coupon" type="text" value="{{ coupon_code|default:'' }}" placeholder="TECHONE2026">
                 <button class="btn-ghost" type="button">Áp dụng</button>
             </div>
         </div>
@@ -55,27 +60,29 @@
         </div>
         <div class="payment-list">
             <label class="payment-option">
-                <input type="radio" name="payment" checked>
+                <input type="radio" name="payment_method" value="cod" {% if payment_method != "wallet" and payment_method != "bank" %}checked{% endif %}>
                 <div>
                     <strong>Thanh toán khi nhận hàng (COD)</strong>
                     <span>Nhận hàng rồi mới thanh toán, an tâm tối đa.</span>
                 </div>
             </label>
             <label class="payment-option">
-                <input type="radio" name="payment">
+                <input type="radio" name="payment_method" value="wallet" {% if payment_method == "wallet" %}checked{% endif %}>
                 <div>
                     <strong>Thẻ ATM / Ví điện tử</strong>
                     <span>Thanh toán nhanh qua MoMo, ZaloPay, VNPAY...</span>
                 </div>
             </label>
             <label class="payment-option">
-                <input type="radio" name="payment">
+                <input type="radio" name="payment_method" value="bank" {% if payment_method == "bank" %}checked{% endif %}>
                 <div>
                     <strong>Chuyển khoản ngân hàng</strong>
                     <span>Nhận thông tin tài khoản sau khi đặt hàng.</span>
                 </div>
             </label>
         </div>
+        {% if errors.payment_method %}<div class="form-error">{{ errors.payment_method }}</div>{% endif %}
+        {% if errors.stock %}<div class="form-error">{{ errors.stock }}</div>{% endif %}
 
         <div class="section-head">
             <h3>Thông tin nhận hàng</h3>
@@ -84,19 +91,27 @@
         <div class="summary-card">
             <div class="summary-line">
                 <span>Khách hàng</span>
-                <strong>{{ user.get_full_name|default:user.username }}</strong>
+                <strong>{{ checkout.full_name|default:user.get_full_name|default:user.username }}</strong>
             </div>
             <div class="summary-line">
                 <span>Email</span>
-                <strong>{{ user.email|default:"--" }}</strong>
+                <strong>{{ checkout.email|default:user.email|default:"--" }}</strong>
             </div>
             <div class="summary-line">
                 <span>Nhận hàng tại</span>
-                <strong>Địa chỉ đã chọn ở bước trước</strong>
+                <strong>
+                    {% if checkout.delivery_method == "pickup" %}
+                        Nhận tại cửa hàng
+                    {% elif address_display %}
+                        {{ address_display }}
+                    {% else %}
+                        Địa chỉ đã chọn ở bước trước
+                    {% endif %}
+                </strong>
             </div>
             <div class="summary-line">
                 <span>Người nhận</span>
-                <strong>{{ user.get_full_name|default:user.username }}</strong>
+                <strong>{{ checkout.full_name|default:user.get_full_name|default:user.username }}</strong>
             </div>
         </div>
 
@@ -105,14 +120,14 @@
             <span class="check-mark"></span>
             <span>Bằng việc đặt hàng, bạn đồng ý với Điều khoản sử dụng của TechOne.</span>
         </label>
-    </div>
+    </form>
 
     <aside class="card checkout-aside">
         <div class="summary-total">
             <span>Tổng tiền tạm tính</span>
             <strong>{{ total|format_vnd }}</strong>
         </div>
-        <button class="btn-primary btn-full" type="button">Thanh toán</button>
+        <button class="btn-primary btn-full" type="submit" form="checkout-form">Thanh toán</button>
         <a class="btn-ghost btn-full" href="{% url 'cart' %}">Kiểm tra danh sách sản phẩm ({{ cart.get_total_quantity }})</a>
     </aside>
 </section>

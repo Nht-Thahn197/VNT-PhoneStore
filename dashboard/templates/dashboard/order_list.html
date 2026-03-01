@@ -1,0 +1,59 @@
+{% extends "dashboard/base.html" %}
+{% load price_filters %}
+
+{% block title %}Quản lý đơn hàng | TechOne{% endblock %}
+{% block page_kicker %}Quản lý đơn hàng{% endblock %}
+{% block page_title %}Danh sách đơn hàng{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <h1>Danh sách đơn hàng</h1>
+        <p class="helper">Theo dõi trạng thái đơn hàng mới nhất từ khách.</p>
+    </div>
+    <div class="page-actions">
+        <a class="btn-ghost" href="{% url 'dashboard_home' %}">Về Dashboard</a>
+    </div>
+</section>
+
+<section class="card">
+    <div class="section-head">
+        <h2>Lọc theo trạng thái</h2>
+        <p class="helper">Tổng: {{ orders|length }}</p>
+    </div>
+    <div class="chips">
+        <a class="chip {% if not status_filter %}active{% endif %}" href="{% url 'order_list' %}">Tất cả</a>
+        {% for item in status_summary %}
+        <a class="chip {% if status_filter == item.key %}active{% endif %}" href="{% url 'order_list' %}?status={{ item.key }}">
+            {{ item.label }} ({{ item.count }})
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="card">
+    <div class="section-head">
+        <h2>Đơn hàng</h2>
+        <p class="helper">Đang hiển thị: {{ orders|length }}</p>
+    </div>
+    {% if orders %}
+    <ul class="list">
+        {% for order in orders %}
+        <li class="list-item">
+            <div class="list-meta">
+                <strong>#{{ order.id }} · {{ order.full_name }}</strong>
+                <span>{{ order.phone }} · {{ order.get_payment_method_display }} · {{ order.created_at|date:"d/m/Y H:i" }}</span>
+            </div>
+            <div class="list-actions">
+                <span class="status-chip is-{{ order.status }}">{{ order.get_status_display }}</span>
+                <span class="helper">{{ order.total|format_vnd }}</span>
+                <a class="btn-ghost btn-sm" href="{% url 'order_detail' order.id %}">Chi tiết</a>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div class="empty-state">Chưa có đơn hàng nào.</div>
+    {% endif %}
+</section>
+{% endblock %}
